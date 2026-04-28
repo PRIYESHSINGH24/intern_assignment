@@ -1,0 +1,33 @@
+# Python
+backend/venv/
+__pycache__/
+*.py[cod]
+*.egg-info/
+.eggs/
+dist/
+build/
+
+# Environment
+backend/.env
+.env
+
+# Uploads & Generated Data
+backend/uploads/
+mock_data/
+
+# Node
+frontend/node_modules/
+frontend/dist/
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+.DS_Store
+
+# Logs
+*.log
+
+# Docker
+.docker/
