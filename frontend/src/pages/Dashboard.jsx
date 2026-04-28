@@ -48,32 +48,32 @@ export default function Dashboard() {
       </div>
 
       <div className="stats-grid">
-        <div className="card card-premium stat-card animate-in delay-100">
+        <div className="card card-premium stat-card hover-glow animate-in delay-100">
           <div className="stat-icon accent"><FolderOpen size={24} /></div>
           <div className="stat-value">{s.total_cases}</div>
           <div className="stat-label">Active Cases</div>
         </div>
-        <div className="card card-premium stat-card animate-in delay-100">
+        <div className="card card-premium stat-card hover-glow animate-in delay-100">
           <div className="stat-icon info"><FileText size={24} /></div>
           <div className="stat-value">{s.total_documents}</div>
           <div className="stat-label">Ingested Documents</div>
         </div>
-        <div className="card card-premium stat-card animate-in delay-200">
+        <div className="card card-premium stat-card hover-glow animate-in delay-200">
           <div className="stat-icon success"><CheckCircle size={24} /></div>
           <div className="stat-value">{s.total_processed}</div>
           <div className="stat-label">Processed via AI</div>
         </div>
-        <div className="card card-premium stat-card animate-in delay-200">
+        <div className="card card-premium stat-card hover-glow animate-in delay-200">
           <div className="stat-icon danger"><XCircle size={24} /></div>
           <div className="stat-value">{s.total_failed}</div>
           <div className="stat-label">Processing Failed</div>
         </div>
-        <div className="card card-premium stat-card animate-in delay-300">
+        <div className="card card-premium stat-card hover-glow animate-in delay-300">
           <div className="stat-icon" style={{background:'rgba(155, 89, 182, 0.15)', color:'#9b59b6'}}><Copy size={24} /></div>
           <div className="stat-value">{s.total_duplicates}</div>
           <div className="stat-label">Near-Duplicates</div>
         </div>
-        <div className="card card-premium stat-card animate-in delay-300">
+        <div className="card card-premium stat-card hover-glow animate-in delay-300">
           <div className="stat-icon warning"><AlertTriangle size={24} /></div>
           <div className="stat-value" style={{color: s.total_red_flags > 0 ? 'var(--warning)' : 'inherit'}}>{s.total_red_flags}</div>
           <div className="stat-label">Red Flags Detected</div>

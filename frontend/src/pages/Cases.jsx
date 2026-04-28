@@ -84,10 +84,10 @@ export default function Cases() {
         </div>
       ) : cases.length === 0 ? (
         <div className="empty-state animate-in delay-200">
-          <div className="empty-state-icon"><FolderOpen size={36} style={{ color: 'var(--text-muted)' }} /></div>
+          <div className="empty-state-icon"><FolderOpen size={36} /></div>
           <h3 style={{ marginBottom: 8, fontSize: 24, color: '#fff' }}>No cases found</h3>
           <p>Create your first case to start processing documents</p>
-          <button className="btn btn-primary" style={{ marginTop: 24 }} onClick={() => setShowModal(true)}><Plus size={18} /> Create Case</button>
+          <button className="btn btn-gradient-pulse" style={{ marginTop: 24, padding: '0 24px' }} onClick={() => setShowModal(true)}><Plus size={18} /> Create Case</button>
         </div>
       ) : (
         <div className="table-container card-premium animate-in delay-200">
@@ -96,7 +96,7 @@ export default function Cases() {
             <tbody>
               {cases.map((c, i) => (
                 <tr key={c.id} 
-                    className="animate-in" 
+                    className="animate-in hover-glow" 
                     style={{ animationDelay: `${200 + (i * 50)}ms`, cursor: 'pointer' }}
                     onClick={() => navigate(`/cases/${c.id}`)}>
                   <td style={{ fontWeight: 600, color: '#fff', fontSize: 15 }}>{c.name}</td>
