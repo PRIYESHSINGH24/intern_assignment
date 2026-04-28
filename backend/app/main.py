@@ -95,3 +95,26 @@ def root():
 def health_check():
     """Health check endpoint."""
     return {"status": "healthy", "version": settings.APP_VERSION}
+
+# Mount frontend if it exists (for unified Docker deployment)
+frontend_path = os.path.join(os.path.dirname(os.path.dirname(__file__)), "frontend", "dist")
+if os.path.exists(frontend_path):
+    logger.info(f"Mounting frontend from {frontend_path}")
+    from fastapi.responses import FileResponse
+    
+    app.mount("/assets", StaticFiles(directory=os.path.join(frontend_path, "assets")), name="assets")
+    app.mount("/vite.svg", StaticFiles(directory=frontend_path, html=True), name="vite_svg")
+    
+    # Catch-all route for React Router (must be added last)
+    @app.get("/{full_path:path}")
+    async def serve_frontend(full_path: str):
+        # Prevent API routes from being swallowed
+        if full_path.startswith("api/") or full_path.startswith("docs") or full_path.startswith("redoc"):
+            from fastapi import HTTPException
+            raise HTTPException(status_code=404, detail="API route not found")
+            
+        file_path = os.path.join(frontend_path, full_path)
+        if os.path.exists(file_path) and os.path.isfile(file_path):
+            return FileResponse(file_path)
+            
+        return FileResponse(os.path.join(frontend_path, "index.html"))
