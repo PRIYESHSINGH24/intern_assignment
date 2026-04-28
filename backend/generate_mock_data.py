@@ -129,7 +129,11 @@ Date: {contract_date.strftime('%B %d, %Y')}            Date: {contract_date.strf
 """
 
     for line in contract_text.split("\n"):
-        pdf.multi_cell(0, 5, line.strip())
+        txt = line.strip()
+        if txt:
+            pdf.multi_cell(w=pdf.w - pdf.l_margin - pdf.r_margin, h=5, text=txt)
+        else:
+            pdf.ln(3)
 
     filepath = os.path.join(MOCK_DIR, filename)
     pdf.output(filepath)
@@ -356,7 +360,11 @@ This report is confidential and intended solely for the use of the board of dire
 """
 
     for line in report_text.split("\n"):
-        pdf.multi_cell(0, 5, line.strip())
+        txt = line.strip()
+        if txt:
+            pdf.multi_cell(w=pdf.w - pdf.l_margin - pdf.r_margin, h=5, text=txt)
+        else:
+            pdf.ln(3)
 
     filepath = os.path.join(MOCK_DIR, filename)
     pdf.output(filepath)
