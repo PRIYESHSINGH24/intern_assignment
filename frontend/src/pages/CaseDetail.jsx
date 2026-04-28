@@ -26,6 +26,7 @@ export default function CaseDetail() {
   const [tab, setTab] = useState('documents');
   const [loading, setLoading] = useState(true);
   const [uploading, setUploading] = useState(false);
+  const [uploadProgress, setUploadProgress] = useState(0);
   const [toast, setToast] = useState(null);
 
   const showToast = (type, message) => { setToast({type,message}); setTimeout(()=>setToast(null),3000); };
@@ -60,12 +61,16 @@ export default function CaseDetail() {
 
   const onDrop = useCallback(async (files) => {
     setUploading(true);
+    setUploadProgress(0);
     try {
-      const res = await uploadDocuments(caseId, files);
+      const res = await uploadDocuments(caseId, files, (progress) => {
+        setUploadProgress(progress);
+      });
       showToast('success', `Uploaded ${res.uploaded_files} files${res.skipped_files ? ` (${res.skipped_files} skipped)` : ''}`);
       loadAll();
     } catch (e) { showToast('error', e.message); }
     setUploading(false);
+    setUploadProgress(0);
   }, [caseId, loadAll]);
 
   const { getRootProps, getInputProps, isDragActive } = useDropzone({ onDrop });
@@ -186,7 +191,15 @@ export default function CaseDetail() {
             <div {...getRootProps()} className={`dropzone ${isDragActive?'active':''}`}>
               <input {...getInputProps()} />
               <div className="dropzone-icon"><Upload size={28}/></div>
-              {uploading ? <p style={{fontSize:18, fontWeight:600, color:'#fff'}}>Uploading payload...</p> : isDragActive ? <p style={{fontSize:18, fontWeight:600, color:'var(--accent)'}}>Drop files here to ingest</p> : (
+              {uploading ? (
+                <div style={{width: '100%', maxWidth: '400px', margin: '0 auto'}}>
+                  <div className="flex-between mb-8">
+                    <p style={{fontSize:16, fontWeight:600, color:'#fff', margin: 0}}>Transmitting payload...</p>
+                    <span style={{color:'var(--accent)', fontWeight: 700}}>{uploadProgress}%</span>
+                  </div>
+                  <div className="progress-bar"><div className="progress-fill" style={{width:`${uploadProgress}%`, transition: 'width 0.2s ease-out'}}/></div>
+                </div>
+              ) : isDragActive ? <p style={{fontSize:18, fontWeight:600, color:'var(--accent)'}}>Drop files here to ingest</p> : (
                 <div><p style={{fontWeight:700, fontSize:18, marginBottom:8, color:'#fff'}}>Drag & drop files or click to browse</p><p style={{fontSize:14,color:'var(--text-muted)'}}>Supports PDF, DOCX, TXT, EML, XLSX, PPTX, images & more</p></div>
               )}
             </div>

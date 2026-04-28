@@ -36,13 +36,35 @@ export const getCaseEntities = (id) => request(`/cases/${id}/entities`);
 export const getDocTypeDistribution = (id) => request(`/cases/${id}/document-types`);
 
 // Upload (special - multipart)
-export async function uploadDocuments(caseId, files) {
-  const formData = new FormData();
-  files.forEach(f => formData.append('files', f));
-  const res = await fetch(`${API_BASE}/cases/${caseId}/upload`, { method: 'POST', body: formData });
-  if (!res.ok) {
-    const err = await res.json().catch(() => ({ detail: res.statusText }));
-    throw new Error(err.detail || 'Upload failed');
-  }
-  return res.json();
+export function uploadDocuments(caseId, files, onProgress) {
+  return new Promise((resolve, reject) => {
+    const formData = new FormData();
+    files.forEach(f => formData.append('files', f));
+
+    const xhr = new XMLHttpRequest();
+    xhr.open('POST', `${API_BASE}/cases/${caseId}/upload`);
+
+    xhr.upload.onprogress = (event) => {
+      if (event.lengthComputable && onProgress) {
+        const percentComplete = Math.round((event.loaded / event.total) * 100);
+        onProgress(percentComplete);
+      }
+    };
+
+    xhr.onload = () => {
+      if (xhr.status >= 200 && xhr.status < 300) {
+        resolve(JSON.parse(xhr.responseText));
+      } else {
+        try {
+          const err = JSON.parse(xhr.responseText);
+          reject(new Error(err.detail || 'Upload failed'));
+        } catch {
+          reject(new Error(xhr.statusText || 'Upload failed'));
+        }
+      }
+    };
+
+    xhr.onerror = () => reject(new Error('Network error during upload'));
+    xhr.send(formData);
+  });
 }
