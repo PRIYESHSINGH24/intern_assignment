@@ -117,8 +117,8 @@ class AIAnalyzer:
         """Build the comprehensive analysis prompt for a single document."""
         truncation_note = "\n[NOTE: Document was truncated for analysis. Analysis is based on the first portion.]" if truncated else ""
 
-        return f"""You are an expert legal document analyst working for a legal-tech company. 
-Analyze the following document thoroughly and return a structured JSON response.
+        return f"""You are an elite, highly meticulous legal and financial document analyst working for a premium legal-tech intelligence agency. 
+Your objective is to extract an EXTREME AMOUNT OF DETAIL from the following document. Do not summarize briefly. Be exhaustive, verbose, and comprehensive. Extract every single entity, date, and possible red flag you can find.
 
 Document filename: {filename}
 {truncation_note}
@@ -128,50 +128,48 @@ DOCUMENT TEXT:
 {text}
 ---
 
-Return a JSON object with EXACTLY these fields:
+Return a JSON object with EXACTLY these fields. Fill every array with as many items as possible:
 
 {{
     "document_type": "<one of: contract, email, transcript, invoice, court_filing, legal_brief, correspondence, financial_document, report, memo, affidavit, deposition, settlement, complaint, motion, subpoena, warrant, evidence_log, witness_statement, other>",
     
-    "summary": "<A concise 2-4 sentence summary capturing the key points, parties involved, and purpose of the document>",
+    "summary": "<A highly detailed, comprehensive 3-5 paragraph executive summary. Explain the core context, the deep background, every party's role, the exact purpose of the document, and any underlying implications or tone. Do not write a short summary. Be verbose.>",
     
     "key_entities": {{
-        "persons": ["<list of person names mentioned>"],
-        "organizations": ["<list of organization/company names>"],
-        "locations": ["<list of locations/addresses>"],
-        "monetary_values": ["<list of monetary amounts with context, e.g., '$50,000 settlement amount'>"],
-        "case_references": ["<list of case numbers or legal references>"]
+        "persons": ["<exhaustive list of EVERY person name mentioned>"],
+        "organizations": ["<exhaustive list of EVERY organization/company name mentioned>"],
+        "locations": ["<exhaustive list of EVERY location/address mentioned>"],
+        "monetary_values": ["<exhaustive list of EVERY monetary amount with full context, e.g., '$50,000 upfront settlement payment to John Doe'>"],
+        "case_references": ["<all case numbers, statutes, or legal references>"]
     }},
     
     "important_dates": [
-        {{"date": "<date in YYYY-MM-DD format or original text if ambiguous>", "context": "<what happened or is scheduled for this date>", "significance": "<low|medium|high>"}}
+        {{"date": "<date in YYYY-MM-DD>", "context": "<extremely detailed explanation of what happened or is scheduled for this date>", "significance": "<low|medium|high>"}}
     ],
     
     "red_flags": [
-        {{"flag": "<brief description of the red flag>", "severity": "<low|medium|high|critical>", "detail": "<detailed explanation of why this is a concern>", "location": "<where in the document this was found>"}}
+        {{"flag": "<title of the red flag>", "severity": "<low|medium|high|critical>", "detail": "<A very thorough, multi-sentence explanation of why this is a risk, legal vulnerability, compliance issue, or suspicious element>", "location": "<exact quote or location in the document>"}}
     ],
     
-    "confidence_score": <float between 0.0 and 1.0 indicating confidence in the analysis>,
+    "confidence_score": <float between 0.0 and 1.0>,
     
-    "language": "<detected language of the document>",
+    "language": "<detected language>",
     
-    "tone": "<professional|informal|hostile|neutral|urgent|confidential>",
+    "tone": "<professional|informal|hostile|neutral|urgent|confidential|suspicious|demanding>",
     
     "additional_metadata": {{
         "has_signatures": <boolean>,
         "has_amendments": <boolean>,
         "requires_action": <boolean>,
-        "action_items": ["<list of any action items or deadlines>"]
+        "action_items": ["<comprehensive list of EVERY action item or required next step mentioned>"]
     }}
 }}
 
 IMPORTANT RULES:
-1. Be thorough but precise in entity extraction
-2. Flag genuinely concerning items as red flags (inconsistencies, unusual clauses, missing information, compliance issues)
-3. If the document appears to be corrupted, garbled, or nonsensical, set document_type to "other" and note it in the summary
-4. Dates should be in ISO format when possible
-5. Be conservative with red flag severity - only mark as "critical" for genuinely serious issues
-6. Return ONLY valid JSON, no markdown formatting or explanation"""
+1. Extract as much text and context as possible. Do not output empty arrays if information exists.
+2. Search aggressively for "Red Flags" (e.g. strict liability, strange payment terms, confidentiality breaches, vague language, hostility).
+3. Ensure the summary is long and deeply analytical.
+4. Return ONLY valid JSON, no markdown formatting or explanation."""
 
     def _build_consolidation_prompt(
         self, summaries, entities, dates, red_flags, doc_types, case_name
@@ -184,8 +182,7 @@ IMPORTANT RULES:
         red_flags_text = json.dumps(red_flags[:30], indent=1)[:4000]
         doc_types_text = json.dumps(doc_types, indent=1)[:1000]
 
-        return f"""You are a senior legal analyst. Based on the following analysis of multiple documents 
-from case "{case_name}", produce a comprehensive case-level consolidated report.
+        return f"""You are a Lead Senior Legal Analyst and Chief Intelligence Officer. Based on the following data extracted from multiple documents in case "{case_name}", produce an EXHAUSTIVE, HIGHLY DETAILED case-level consolidated intelligence report. Do not skip any details. Be highly verbose.
 
 DOCUMENT TYPE DISTRIBUTION:
 {doc_types_text}
@@ -202,43 +199,43 @@ IMPORTANT DATES:
 RED FLAGS IDENTIFIED:
 {red_flags_text}
 
-Generate a consolidated JSON report:
+Generate a consolidated JSON report containing extreme detail:
 
 {{
-    "executive_summary": "<A comprehensive 3-5 paragraph executive summary of the entire case, covering key parties, timeline of events, major findings, and overall assessment>",
+    "executive_summary": "<A massive, comprehensive 5-8 paragraph executive summary of the entire case. Explain the exact narrative, timeline of events, who did what, where the money went, what the red flags mean, and a strategic legal assessment. Be incredibly thorough and verbose.>",
     
     "risk_assessment": {{
         "overall_risk": "<low|medium|high|critical>",
         "risk_score": <integer 1-100>,
         "factors": [
-            {{"factor": "<risk factor>", "severity": "<low|medium|high|critical>", "description": "<explanation>"}}
+            {{"factor": "<risk factor>", "severity": "<low|medium|high|critical>", "description": "<A very deep, multi-sentence explanation of why this risk exists based on the documents.>"}}
         ]
     }},
     
     "timeline": [
-        {{"date": "<date>", "event": "<what happened>", "significance": "<low|medium|high>", "source_documents": ["<which documents mention this>"]}}
+        {{"date": "<date>", "event": "<highly detailed description of the event>", "significance": "<low|medium|high>", "source_documents": ["<which documents mention this>"]}}
     ],
     
     "key_findings": [
-        {{"finding": "<key finding>", "supporting_evidence": "<which documents support this>", "importance": "<low|medium|high>"}}
+        {{"finding": "<key finding>", "supporting_evidence": "<detailed evidence from documents>", "importance": "<low|medium|high>"}}
     ],
     
     "entity_network": {{
-        "primary_parties": ["<main parties involved>"],
-        "relationships": ["<key relationships between parties>"],
+        "primary_parties": ["<all main parties involved>"],
+        "relationships": ["<extremely detailed breakdown of how each party knows each other or is legally connected>"],
         "organizations_involved": ["<all organizations>"]
     }},
     
     "recommendations": [
-        "<specific recommendations for the legal review team>"
+        "<exhaustive, actionable recommendations for the legal review team, including further discovery required>"
     ],
     
     "gaps_and_concerns": [
-        "<any gaps in documentation or unresolved concerns>"
+        "<detailed list of missing information, inconsistencies, or contradictions across the documents>"
     ]
 }}
 
-Be thorough, analytical, and precise. Cross-reference information across documents.
+Be thorough, analytical, and extremely precise. Cross-reference information across documents to build a complete narrative.
 Return ONLY valid JSON."""
 
     def _parse_response(self, response_text: str) -> Dict[str, Any]:
