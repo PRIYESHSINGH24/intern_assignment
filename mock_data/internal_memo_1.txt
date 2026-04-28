@@ -1,0 +1,43 @@
+INTERNAL MEMORANDUM
+CONFIDENTIAL - ATTORNEY WORK PRODUCT
+
+TO: Travis Booth, Department Head
+FROM: Charles Wagner, Paralegal
+DATE: May 26, 2025
+RE: Case Analysis - Abbott-Richardson Matter
+
+------------------------------------------------------------
+
+SUMMARY OF FINDINGS:
+
+Following my review of the documents produced in discovery, I have identified 
+the following issues that require immediate attention:
+
+1. DOCUMENT INCONSISTENCIES
+   - The executed version of the merger agreement 
+     dated October 03, 2025 differs 
+     materially from the draft version in our files
+   - Key changes include modifications to the indemnification clause
+   - These changes were not authorized by Todd Jones
+
+2. TIMELINE DISCREPANCIES
+   - The respondent claims the agreement was signed on October 18, 2024
+   - However, email metadata suggests the document was created 2 weeks later
+   - This raises questions about the authenticity of the signed version
+
+3. FINANCIAL IRREGULARITIES
+   - Wire transfer records show $569,185 in payments 
+     to an entity not disclosed in the original agreement
+   - The receiving entity appears to be controlled by Erik Jacobson MD, 
+     a board member
+
+RECOMMENDED ACTIONS:
+- Subpoena bank records for the period November 2024 
+  through February 2026
+- Depose Jason Taylor regarding knowledge of the undisclosed payments
+- Engage forensic document examiner to verify authenticity of signatures
+- File motion to compel production of all communications with Bond-Hernandez
+
+DEADLINE: Response due by April 28, 2026
+
+Please advise on how to proceed.

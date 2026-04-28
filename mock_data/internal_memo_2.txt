@@ -1,0 +1,43 @@
+INTERNAL MEMORANDUM
+CONFIDENTIAL - ATTORNEY WORK PRODUCT
+
+TO: Taylor Elliott, Managing Partner
+FROM: Charlene Lynch, Paralegal
+DATE: October 12, 2025
+RE: Case Analysis - Knapp-Winters Matter
+
+------------------------------------------------------------
+
+SUMMARY OF FINDINGS:
+
+Following my review of the documents produced in discovery, I have identified 
+the following issues that require immediate attention:
+
+1. DOCUMENT INCONSISTENCIES
+   - The executed version of the licensing contract 
+     dated January 29, 2025 differs 
+     materially from the draft version in our files
+   - Key changes include modifications to the payment terms
+   - These changes were not authorized by Amber Moses
+
+2. TIMELINE DISCREPANCIES
+   - The respondent claims the agreement was signed on August 17, 2024
+   - However, email metadata suggests the document was created 6 weeks later
+   - This raises questions about the authenticity of the signed version
+
+3. FINANCIAL IRREGULARITIES
+   - Wire transfer records show $1,941,195 in payments 
+     to an entity not disclosed in the original agreement
+   - The receiving entity appears to be controlled by Bridget Owens, 
+     a former employee
+
+RECOMMENDED ACTIONS:
+- Subpoena bank records for the period November 2024 
+  through February 2026
+- Depose Jose Ponce regarding knowledge of the undisclosed payments
+- Engage forensic document examiner to verify authenticity of signatures
+- File motion to compel production of all communications with Johnston-Cook
+
+DEADLINE: Response due by May 04, 2026
+
+Please advise on how to proceed.
