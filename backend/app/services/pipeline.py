@@ -97,55 +97,53 @@ class ProcessingPipeline:
                 for doc in existing_docs if doc.simhash_value
             }
 
-            # Step 3: Process documents concurrently
+            # Step 3: Process documents sequentially (reliable with remote DB)
             processed = 0
             failed = 0
             duplicates = 0
 
-            # Use ThreadPoolExecutor for concurrent processing
-            with ThreadPoolExecutor(max_workers=self.max_workers) as executor:
-                future_to_doc = {}
-                for doc in documents:
-                    future = executor.submit(
-                        self._process_single_document,
+            for i, doc in enumerate(documents):
+                logger.info(f"Processing document {i+1}/{total}: {doc.original_filename}")
+                try:
+                    result = self._process_single_document(
                         str(doc.id), str(case_id),
                         doc.file_path, doc.original_filename, doc.file_type,
                         dict(existing_hashes), dict(existing_simhashes)
                     )
-                    future_to_doc[future] = doc
 
-                for future in as_completed(future_to_doc):
-                    doc = future_to_doc[future]
+                    # Refresh and update document
+                    db.refresh(doc)
+                    self._update_document_from_result(db, doc, result)
+
+                    if result.get("is_duplicate"):
+                        duplicates += 1
+                    else:
+                        processed += 1
+                        if result.get("file_hash"):
+                            existing_hashes[result["file_hash"]] = str(doc.id)
+                        if result.get("simhash"):
+                            existing_simhashes[result["simhash"]] = str(doc.id)
+
+                except Exception as e:
+                    failed += 1
+                    logger.error(f"Document {doc.id} failed: {e}")
                     try:
-                        result = future.result()
-                        # Update document in database
-                        self._update_document_from_result(db, doc, result)
-
-                        if result.get("is_duplicate"):
-                            duplicates += 1
-                            # Don't add duplicate hashes to the pool
-                        else:
-                            processed += 1
-                            # Add new hashes to the pool for subsequent dedup checks
-                            if result.get("file_hash"):
-                                existing_hashes[result["file_hash"]] = str(doc.id)
-                            if result.get("simhash"):
-                                existing_simhashes[result["simhash"]] = str(doc.id)
-
-                    except Exception as e:
-                        failed += 1
-                        logger.error(f"Document {doc.id} processing failed: {e}")
+                        db.refresh(doc)
                         doc.status = "failed"
                         doc.error_message = str(e)[:1000]
-                        self._log(db, case_id, str(doc.id), "processing", "failed",
-                                  f"Error: {str(e)[:500]}")
+                    except Exception:
+                        pass
+                    self._log(db, case_id, str(doc.id), "processing", "failed",
+                              f"Error: {str(e)[:500]}")
 
-                    # Update case progress
-                    total_done = processed + failed + duplicates
-                    case.processed_documents = processed
-                    case.failed_documents = failed
-                    case.duplicate_documents = duplicates
+                # Update case progress
+                case.processed_documents = processed
+                case.failed_documents = failed
+                case.duplicate_documents = duplicates
+                try:
                     db.commit()
+                except Exception:
+                    db.rollback()
 
             # Step 4: Generate case-level consolidation
             self._log(db, case_id, None, "consolidation", "started",
