@@ -147,6 +147,14 @@ Return a JSON object with EXACTLY these fields. Fill every array with as many it
         {{"date": "<date in YYYY-MM-DD>", "context": "<extremely detailed explanation of what happened or is scheduled for this date>", "significance": "<low|medium|high>"}}
     ],
     
+    "project_details": {{
+        "project_name": "<name of the project or initiative mentioned, if any>",
+        "project_description": "<highly detailed explanation of what the project is about>",
+        "deadlines_and_deliverables": [
+            {{"deadline": "<exact date or timeframe>", "deliverable": "<what exactly is due or required by this deadline>"}}
+        ]
+    }},
+    
     "red_flags": [
         {{"flag": "<title of the red flag>", "severity": "<low|medium|high|critical>", "detail": "<A very thorough, multi-sentence explanation of why this is a risk, legal vulnerability, compliance issue, or suspicious element>", "location": "<exact quote or location in the document>"}}
     ],
