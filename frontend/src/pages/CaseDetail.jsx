@@ -121,8 +121,8 @@ export default function CaseDetail() {
 
       {/* Action Buttons */}
       <div className="flex gap-12 mb-32 animate-in delay-100">
-        <button className="btn btn-primary" onClick={handleProcess} disabled={c.status==='processing'||pending===0}>
-          <Play size={16}/> Initialize Processing ({pending} pending)
+        <button className="btn btn-gradient-pulse" style={{padding: '0 24px'}} onClick={handleProcess} disabled={c.status==='processing'||pending===0}>
+          <Play size={16}/> Initialize Intelligence Sequence ({pending} pending)
         </button>
         <button className="btn btn-outline" onClick={handleReprocess} disabled={c.status==='processing'}>
           <RefreshCw size={16}/> Reprocess Failed

@@ -600,6 +600,71 @@ tr:last-child td { border-bottom: none; }
   position: relative;
 }
 
+/* --- ULTRA PREMIUM POLISH --- */
+/* Custom OLED Scrollbars */
+::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+::-webkit-scrollbar-track {
+  background: var(--bg-primary); 
+}
+::-webkit-scrollbar-thumb {
+  background: rgba(255, 255, 255, 0.1); 
+  border-radius: 4px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: rgba(255, 255, 255, 0.2); 
+}
+
+/* Hover Glow Utilities */
+.hover-glow {
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+.hover-glow:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 30px rgba(94, 106, 210, 0.25);
+  border-color: rgba(94, 106, 210, 0.4);
+}
+
+/* Gradient Pulse Button */
+.btn-gradient-pulse {
+  background: linear-gradient(45deg, #5e6ad2, #9b59b6, #5e6ad2);
+  background-size: 200% 200%;
+  animation: gradientPulse 3s ease infinite;
+  border: none;
+  color: white;
+  box-shadow: 0 4px 15px rgba(94, 106, 210, 0.4);
+}
+.btn-gradient-pulse:hover {
+  box-shadow: 0 6px 20px rgba(94, 106, 210, 0.6);
+  transform: translateY(-1px);
+}
+.btn-gradient-pulse:disabled {
+  background: var(--bg-input);
+  animation: none;
+  box-shadow: none;
+  color: var(--text-muted);
+}
+@keyframes gradientPulse {
+  0% { background-position: 0% 50%; }
+  50% { background-position: 100% 50%; }
+  100% { background-position: 0% 50%; }
+}
+
+/* Floating Empty State Icon */
+.empty-state-icon {
+  animation: floatIcon 4s ease-in-out infinite;
+  color: var(--glass-border);
+  margin-bottom: 16px;
+}
+@keyframes floatIcon {
+  0% { transform: translateY(0px); }
+  50% { transform: translateY(-10px); }
+  100% { transform: translateY(0px); }
+}
+/* ----------------------------- */
+
 .tab:hover { color: var(--text-primary); }
 .tab.active { color: var(--text-primary); }
 
