@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { getDocument, getDocumentText } from '../api/client';
-import { ChevronLeft, FileText, AlertTriangle, Clock, Users, Building, MapPin, DollarSign, CheckCircle, Copy, Eye } from 'lucide-react';
+import { ChevronLeft, FileText, AlertTriangle, Clock, Users, Building, MapPin, DollarSign, CheckCircle, Copy, Eye, FileSearch } from 'lucide-react';
 
 export default function DocumentDetail() {
   const { docId } = useParams();
@@ -18,8 +18,13 @@ export default function DocumentDetail() {
       .finally(() => setLoading(false));
   }, [docId]);
 
-  if (loading) return <div className="loading-container"><div className="loading-spinner" /></div>;
-  if (!doc) return <div className="empty-state"><p>Document not found</p></div>;
+  if (loading) return (
+    <div className="loading-container animate-in">
+      <div className="loading-spinner" />
+      <p style={{marginTop:16, fontWeight:600, letterSpacing:'2px', fontSize:12, textTransform:'uppercase'}}>Extracting Document Data...</p>
+    </div>
+  );
+  if (!doc) return <div className="empty-state animate-in"><p>Document not found in pipeline</p></div>;
 
   const entities = doc.key_entities || {};
   const dates = doc.important_dates || [];
@@ -27,45 +32,45 @@ export default function DocumentDetail() {
   const meta = doc.ai_metadata || {};
 
   return (
-    <div>
-      <div className="flex gap-12" style={{ alignItems: 'center', marginBottom: 8 }}>
+    <div style={{paddingBottom: 40}}>
+      <div className="flex gap-12 animate-in" style={{ alignItems: 'center', marginBottom: 16 }}>
         <button className="btn btn-outline btn-sm btn-icon" onClick={() => navigate(-1)}><ChevronLeft size={16} /></button>
         <div className="page-header" style={{ margin: 0 }}>
           <div className="flex gap-12" style={{ alignItems: 'center' }}>
-            <h2 style={{ fontSize: 22 }}>{doc.original_filename}</h2>
+            <h2 style={{ fontSize: 26, margin: 0 }}>{doc.original_filename}</h2>
             <span className={`badge badge-${doc.status === 'completed' ? 'success' : doc.status === 'failed' ? 'danger' : doc.status === 'duplicate' ? 'purple' : 'muted'}`}>{doc.status}</span>
           </div>
         </div>
       </div>
 
       {/* Info Row */}
-      <div className="flex gap-16 mb-24" style={{ flexWrap: 'wrap' }}>
-        <div className="card" style={{ padding: '12px 20px', flex: 1, minWidth: 150 }}>
-          <div style={{ fontSize: 11, color: 'var(--text-muted)', textTransform: 'uppercase' }}>File Type</div>
-          <div style={{ fontWeight: 600, marginTop: 2 }}>{doc.file_type?.toUpperCase()}</div>
+      <div className="flex gap-16 mb-32 animate-in delay-100" style={{ flexWrap: 'wrap' }}>
+        <div className="card card-premium" style={{ padding: '16px 20px', flex: 1, minWidth: 150 }}>
+          <div style={{ fontSize: 12, color: 'var(--text-muted)', textTransform: 'uppercase', fontWeight:600, letterSpacing:'0.5px' }}>File Type</div>
+          <div style={{ fontWeight: 700, fontSize: 18, marginTop: 4, color:'#fff' }}>{doc.file_type?.toUpperCase()}</div>
         </div>
-        <div className="card" style={{ padding: '12px 20px', flex: 1, minWidth: 150 }}>
-          <div style={{ fontSize: 11, color: 'var(--text-muted)', textTransform: 'uppercase' }}>Size</div>
-          <div style={{ fontWeight: 600, marginTop: 2 }}>{(doc.file_size / 1024).toFixed(1)} KB</div>
+        <div className="card card-premium" style={{ padding: '16px 20px', flex: 1, minWidth: 150 }}>
+          <div style={{ fontSize: 12, color: 'var(--text-muted)', textTransform: 'uppercase', fontWeight:600, letterSpacing:'0.5px' }}>Payload Size</div>
+          <div style={{ fontWeight: 700, fontSize: 18, marginTop: 4, color:'#fff' }}>{(doc.file_size / 1024).toFixed(1)} KB</div>
         </div>
-        <div className="card" style={{ padding: '12px 20px', flex: 1, minWidth: 150 }}>
-          <div style={{ fontSize: 11, color: 'var(--text-muted)', textTransform: 'uppercase' }}>Doc Type</div>
-          <div style={{ fontWeight: 600, marginTop: 2 }}>{doc.document_type || 'Unknown'}</div>
+        <div className="card card-premium" style={{ padding: '16px 20px', flex: 1, minWidth: 150 }}>
+          <div style={{ fontSize: 12, color: 'var(--text-muted)', textTransform: 'uppercase', fontWeight:600, letterSpacing:'0.5px' }}>Doc Type Taxonomy</div>
+          <div style={{ fontWeight: 700, fontSize: 18, marginTop: 4, color:'var(--accent)' }}>{doc.document_type || 'Unknown'}</div>
         </div>
-        <div className="card" style={{ padding: '12px 20px', flex: 1, minWidth: 150 }}>
-          <div style={{ fontSize: 11, color: 'var(--text-muted)', textTransform: 'uppercase' }}>Confidence</div>
-          <div style={{ fontWeight: 600, marginTop: 2 }}>{doc.confidence_score ? `${(doc.confidence_score * 100).toFixed(0)}%` : '—'}</div>
+        <div className="card card-premium" style={{ padding: '16px 20px', flex: 1, minWidth: 150 }}>
+          <div style={{ fontSize: 12, color: 'var(--text-muted)', textTransform: 'uppercase', fontWeight:600, letterSpacing:'0.5px' }}>AI Confidence</div>
+          <div style={{ fontWeight: 700, fontSize: 18, marginTop: 4, color: doc.confidence_score > 0.8 ? 'var(--success)' : 'var(--warning)' }}>{doc.confidence_score ? `${(doc.confidence_score * 100).toFixed(0)}%` : '—'}</div>
         </div>
         {doc.is_duplicate && (
-          <div className="card" style={{ padding: '12px 20px', flex: 1, minWidth: 150, borderColor: '#8b5cf6' }}>
-            <div style={{ fontSize: 11, color: '#8b5cf6', textTransform: 'uppercase' }}>Duplicate</div>
-            <div style={{ fontWeight: 600, marginTop: 2, color: '#8b5cf6' }}>{doc.similarity_score ? `${(doc.similarity_score * 100).toFixed(0)}% similar` : 'Exact'}</div>
+          <div className="card card-premium" style={{ padding: '16px 20px', flex: 1, minWidth: 150, borderColor: 'rgba(139, 92, 246, 0.4)', background: 'rgba(139, 92, 246, 0.05)' }}>
+            <div style={{ fontSize: 12, color: '#8b5cf6', textTransform: 'uppercase', fontWeight:600, letterSpacing:'0.5px' }}>Duplicate Status</div>
+            <div style={{ fontWeight: 700, fontSize: 18, marginTop: 4, color: '#a78bfa' }}>{doc.similarity_score ? `${(doc.similarity_score * 100).toFixed(0)}% similar` : 'Exact'}</div>
           </div>
         )}
       </div>
 
       {/* Tabs */}
-      <div className="tabs">
+      <div className="tabs animate-in delay-200">
         {['overview', 'entities', 'dates', 'red-flags', 'text'].map(t => (
           <button key={t} className={`tab ${tab === t ? 'active' : ''}`} onClick={() => setTab(t)}>
             {t.replace('-', ' ').replace(/\b\w/g, l => l.toUpperCase())}
@@ -73,109 +78,120 @@ export default function DocumentDetail() {
         ))}
       </div>
 
-      {tab === 'overview' && (
-        <div>
-          <div className="card mb-24">
-            <div className="section-title">Summary</div>
-            <p style={{ lineHeight: 1.7, color: 'var(--text-secondary)' }}>{doc.summary || 'No summary available.'}</p>
+      {/* Tab Content */}
+      <div className="animate-in delay-300">
+        {tab === 'overview' && (
+          <div>
+            <div className="card card-premium mb-24 animate-in">
+              <div className="section-title"><FileText size={20} color="var(--accent)"/> Document Summary</div>
+              <p style={{ lineHeight: 1.8, fontSize: 15, color: 'var(--text-secondary)' }}>{doc.summary || 'No summary sequence generated.'}</p>
+            </div>
+            {meta.additional && (
+              <div className="card card-premium mb-24 animate-in delay-100">
+                <div className="section-title"><FileSearch size={20} color="var(--info)"/> Deep AI Metadata</div>
+                <div className="grid-2">
+                  <div>
+                    <p style={{ fontSize: 14, color: '#fff' }}><strong style={{color:'var(--text-muted)'}}>Language Matrix:</strong> {meta.language || 'en'}</p>
+                    <p style={{ fontSize: 14, color: '#fff', marginTop: 10 }}><strong style={{color:'var(--text-muted)'}}>Semantic Tone:</strong> {meta.tone || 'neutral'}</p>
+                    <p style={{ fontSize: 14, color: '#fff', marginTop: 10 }}><strong style={{color:'var(--text-muted)'}}>Page Count:</strong> {doc.page_count || 'N/A'}</p>
+                  </div>
+                  <div>
+                    <p style={{ fontSize: 14, color: '#fff' }}><strong style={{color:'var(--text-muted)'}}>Vision OCR Applied:</strong> {doc.ocr_applied ? <span style={{color:'var(--success)'}}>True</span> : 'False'}</p>
+                    <p style={{ fontSize: 14, color: '#fff', marginTop: 10 }}><strong style={{color:'var(--text-muted)'}}>Contains Images:</strong> {doc.has_images ? 'True' : 'False'}</p>
+                    <p style={{ fontSize: 14, color: '#fff', marginTop: 10 }}><strong style={{color:'var(--text-muted)'}}>Extracted Bytes:</strong> {doc.text_length?.toLocaleString()} chars</p>
+                  </div>
+                </div>
+                {meta.additional?.requires_action && (
+                  <div className="flag-card medium" style={{ marginTop: 24 }}>
+                    <div style={{ fontWeight: 700, fontSize:15, color:'#fff' }}>System Action Required</div>
+                    <ul style={{ marginTop: 8, paddingLeft: 20, fontSize: 14, color:'var(--text-secondary)' }}>
+                      {(meta.additional.action_items || []).map((a, i) => <li key={i} style={{marginBottom: 6}}>{a}</li>)}
+                    </ul>
+                  </div>
+                )}
+              </div>
+            )}
           </div>
-          {meta.additional && (
-            <div className="card mb-24">
-              <div className="section-title">Metadata</div>
-              <div className="grid-2">
+        )}
+
+        {tab === 'entities' && (
+          <div className="grid-2 animate-in">
+            <div className="card card-premium">
+              <div className="section-title"><Users size={20} color="#8c9eff"/> Persons Identified</div>
+              <div className="flex flex-wrap">
+                {(entities.persons || []).length > 0
+                  ? entities.persons.map((p, i) => <span key={i} className="entity-tag person">{p}</span>)
+                  : <p style={{ color: 'var(--text-muted)', fontSize: 14 }}>None identified</p>}
+              </div>
+            </div>
+            <div className="card card-premium">
+              <div className="section-title"><Building size={20} color="#33ffb8"/> Organizations Identified</div>
+              <div className="flex flex-wrap">
+                {(entities.organizations || []).length > 0
+                  ? entities.organizations.map((o, i) => <span key={i} className="entity-tag org">{o}</span>)
+                  : <p style={{ color: 'var(--text-muted)', fontSize: 14 }}>None identified</p>}
+              </div>
+            </div>
+            <div className="card card-premium">
+              <div className="section-title"><MapPin size={20} color="#ffd670"/> Geographic Locations</div>
+              <div className="flex flex-wrap">
+                {(entities.locations || []).length > 0
+                  ? entities.locations.map((l, i) => <span key={i} className="entity-tag location">{l}</span>)
+                  : <p style={{ color: 'var(--text-muted)', fontSize: 14 }}>None identified</p>}
+              </div>
+            </div>
+            <div className="card card-premium">
+              <div className="section-title"><DollarSign size={20} color="#d698f5"/> Financial Values</div>
+              <div className="flex flex-wrap">
+                {(entities.monetary_values || []).length > 0
+                  ? entities.monetary_values.map((m, i) => <span key={i} className="entity-tag money">{m}</span>)
+                  : <p style={{ color: 'var(--text-muted)', fontSize: 14 }}>None identified</p>}
+              </div>
+            </div>
+          </div>
+        )}
+
+        {tab === 'dates' && (
+          <div className="card card-premium animate-in">
+            {dates.length > 0 ? dates.map((d, i) => (
+              <div key={i} className="timeline-item animate-in" style={{animationDelay: `${100 + i*50}ms`}}>
+                <div className={`timeline-dot ${d.significance || 'medium'}`} />
                 <div>
-                  <p style={{ fontSize: 13 }}><strong>Language:</strong> {meta.language || 'en'}</p>
-                  <p style={{ fontSize: 13, marginTop: 6 }}><strong>Tone:</strong> {meta.tone || 'neutral'}</p>
-                  <p style={{ fontSize: 13, marginTop: 6 }}><strong>Pages:</strong> {doc.page_count || 'N/A'}</p>
-                </div>
-                <div>
-                  <p style={{ fontSize: 13 }}><strong>OCR Applied:</strong> {doc.ocr_applied ? 'Yes' : 'No'}</p>
-                  <p style={{ fontSize: 13, marginTop: 6 }}><strong>Has Images:</strong> {doc.has_images ? 'Yes' : 'No'}</p>
-                  <p style={{ fontSize: 13, marginTop: 6 }}><strong>Text Length:</strong> {doc.text_length?.toLocaleString()} chars</p>
+                  <div style={{ fontWeight: 700, fontSize:15, color:'#fff' }}>{d.date}</div>
+                  <p style={{ fontSize: 14, color: 'var(--text-secondary)', marginTop: 4 }}>{d.context}</p>
                 </div>
               </div>
-              {meta.additional?.requires_action && (
-                <div className="flag-card medium" style={{ marginTop: 16 }}>
-                  <div style={{ fontWeight: 600 }}>Action Required</div>
-                  <ul style={{ marginTop: 6, paddingLeft: 20, fontSize: 13 }}>
-                    {(meta.additional.action_items || []).map((a, i) => <li key={i}>{a}</li>)}
-                  </ul>
+            )) : <div className="empty-state"><p>No critical chronological events found</p></div>}
+          </div>
+        )}
+
+        {tab === 'red-flags' && (
+          <div className="animate-in">
+            {flags.length > 0 ? flags.map((f, i) => (
+              <div key={i} className={`flag-card ${f.severity} animate-in`} style={{animationDelay: `${100 + i*50}ms`}}>
+                <div className="flex-between">
+                  <div style={{ fontWeight: 700, fontSize: 15, color: '#fff' }}><AlertTriangle size={16} style={{ marginRight: 8 }} />{f.flag}</div>
+                  <span className={`badge badge-${f.severity === 'critical' || f.severity === 'high' ? 'danger' : f.severity === 'medium' ? 'warning' : 'info'}`}>{f.severity}</span>
                 </div>
-              )}
-            </div>
-          )}
-        </div>
-      )}
-
-      {tab === 'entities' && (
-        <div className="grid-2">
-          <div className="card">
-            <div className="section-title"><Users size={16} /> Persons</div>
-            {(entities.persons || []).length > 0
-              ? entities.persons.map((p, i) => <span key={i} className="entity-tag person">{p}</span>)
-              : <p style={{ color: 'var(--text-muted)', fontSize: 13 }}>None</p>}
-          </div>
-          <div className="card">
-            <div className="section-title"><Building size={16} /> Organizations</div>
-            {(entities.organizations || []).length > 0
-              ? entities.organizations.map((o, i) => <span key={i} className="entity-tag org">{o}</span>)
-              : <p style={{ color: 'var(--text-muted)', fontSize: 13 }}>None</p>}
-          </div>
-          <div className="card">
-            <div className="section-title"><MapPin size={16} /> Locations</div>
-            {(entities.locations || []).length > 0
-              ? entities.locations.map((l, i) => <span key={i} className="entity-tag location">{l}</span>)
-              : <p style={{ color: 'var(--text-muted)', fontSize: 13 }}>None</p>}
-          </div>
-          <div className="card">
-            <div className="section-title"><DollarSign size={16} /> Monetary Values</div>
-            {(entities.monetary_values || []).length > 0
-              ? entities.monetary_values.map((m, i) => <span key={i} className="entity-tag money">{m}</span>)
-              : <p style={{ color: 'var(--text-muted)', fontSize: 13 }}>None</p>}
-          </div>
-        </div>
-      )}
-
-      {tab === 'dates' && (
-        <div className="card">
-          {dates.length > 0 ? dates.map((d, i) => (
-            <div key={i} className="timeline-item">
-              <div className={`timeline-dot ${d.significance || 'medium'}`} />
-              <div>
-                <div style={{ fontWeight: 600 }}>{d.date}</div>
-                <p style={{ fontSize: 13, color: 'var(--text-secondary)', marginTop: 2 }}>{d.context}</p>
+                <p style={{ fontSize: 14, color: 'var(--text-secondary)', marginTop: 8 }}>{f.detail}</p>
+                {f.location && <p style={{ fontSize: 12, color: 'var(--text-muted)', marginTop: 8 }}>Source Location: <span style={{color:'var(--accent)'}}>{f.location}</span></p>}
               </div>
-            </div>
-          )) : <div className="empty-state"><p>No important dates found</p></div>}
-        </div>
-      )}
-
-      {tab === 'red-flags' && (
-        <div>
-          {flags.length > 0 ? flags.map((f, i) => (
-            <div key={i} className={`flag-card ${f.severity}`}>
-              <div className="flex-between">
-                <div style={{ fontWeight: 600 }}><AlertTriangle size={14} style={{ marginRight: 6 }} />{f.flag}</div>
-                <span className={`badge badge-${f.severity === 'critical' || f.severity === 'high' ? 'danger' : f.severity === 'medium' ? 'warning' : 'info'}`}>{f.severity}</span>
-              </div>
-              <p style={{ fontSize: 13, color: 'var(--text-secondary)', marginTop: 6 }}>{f.detail}</p>
-              {f.location && <p style={{ fontSize: 11, color: 'var(--text-muted)', marginTop: 4 }}>Location: {f.location}</p>}
-            </div>
-          )) : <div className="empty-state"><p>No red flags detected</p></div>}
-        </div>
-      )}
-
-      {tab === 'text' && (
-        <div className="card">
-          <div className="flex-between mb-16">
-            <div className="section-title" style={{ margin: 0 }}>Extracted Text</div>
-            <span className="badge badge-muted">{doc.text_length?.toLocaleString()} chars</span>
+            )) : <div className="empty-state card card-premium"><p>No red flags detected in document</p></div>}
           </div>
-          <pre style={{ whiteSpace: 'pre-wrap', fontSize: 13, lineHeight: 1.6, color: 'var(--text-secondary)', maxHeight: 600, overflow: 'auto', background: 'var(--bg-input)', padding: 16, borderRadius: 8 }}>
-            {text || 'No text extracted.'}
-          </pre>
-        </div>
-      )}
+        )}
+
+        {tab === 'text' && (
+          <div className="card card-premium animate-in">
+            <div className="flex-between mb-24">
+              <div className="section-title" style={{ margin: 0 }}>Raw Extracted Data</div>
+              <span className="badge badge-muted">{doc.text_length?.toLocaleString()} sequence chars</span>
+            </div>
+            <pre style={{ whiteSpace: 'pre-wrap', fontSize: 14, lineHeight: 1.7, color: 'var(--text-secondary)', maxHeight: 600, overflow: 'auto', background: 'rgba(5,5,10,0.8)', padding: 24, borderRadius: 12, border: '1px solid rgba(255,255,255,0.05)' }}>
+              {text || 'No text extracted.'}
+            </pre>
+          </div>
+        )}
+      </div>
     </div>
   );
 }
