@@ -84,10 +84,32 @@ export default function DocumentDetail() {
           <div>
             <div className="card card-premium mb-24 animate-in">
               <div className="section-title"><FileText size={20} color="var(--accent)"/> Document Summary</div>
-              <p style={{ lineHeight: 1.8, fontSize: 15, color: 'var(--text-secondary)' }}>{doc.summary || 'No summary sequence generated.'}</p>
+              <p style={{ lineHeight: 1.8, fontSize: 15, color: 'var(--text-secondary)', whiteSpace: 'pre-wrap' }}>{doc.summary || 'No summary sequence generated.'}</p>
             </div>
-            {meta.additional && (
+            
+            {meta.project_details && (meta.project_details.project_name || meta.project_details.project_description) && (
               <div className="card card-premium mb-24 animate-in delay-100">
+                <div className="section-title"><CheckCircle size={20} color="var(--success)"/> Project & Deliverables</div>
+                {meta.project_details.project_name && <p style={{ fontSize: 16, color: '#fff', fontWeight: 600, marginBottom: 8 }}>{meta.project_details.project_name}</p>}
+                {meta.project_details.project_description && <p style={{ fontSize: 14, color: 'var(--text-secondary)', marginBottom: 16, whiteSpace: 'pre-wrap' }}>{meta.project_details.project_description}</p>}
+                
+                {meta.project_details.deadlines_and_deliverables?.length > 0 && (
+                  <div style={{marginTop: 16}}>
+                    <strong style={{color:'var(--text-muted)', fontSize: 13, textTransform:'uppercase'}}>Deadlines & Deliverables</strong>
+                    <ul style={{ marginTop: 8, paddingLeft: 20, fontSize: 14, color:'#fff' }}>
+                      {meta.project_details.deadlines_and_deliverables.map((d, i) => (
+                        <li key={i} style={{marginBottom: 8}}>
+                          <span style={{color: 'var(--warning)', fontWeight: 600}}>[{d.deadline}]</span> {d.deliverable}
+                        </li>
+                      ))}
+                    </ul>
+                  </div>
+                )}
+              </div>
+            )}
+
+            {meta.additional && (
+              <div className="card card-premium mb-24 animate-in delay-200">
                 <div className="section-title"><FileSearch size={20} color="var(--info)"/> Deep AI Metadata</div>
                 <div className="grid-2">
                   <div>
