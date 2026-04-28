@@ -1,43 +1,43 @@
 UNITED STATES DISTRICT COURT
-NORTHERN DISTRICT OF ARKANSAS
+NORTHERN DISTRICT OF KANSAS
 
-Case No.: 16-CV-6739
-MUELLER GROUP v. OLSON INC
+Case No.: 40-CV-2379
+ENGLISH, WALSH AND BRIGGS v. NELSON LLC
 
-DEPOSITION OF JAMES HERNANDEZ
-Date: June 02, 2025
-Location: 0395 Watts Ferry Apt. 464
-Katelynshire, ME 46442
+DEPOSITION OF BRITTNEY DAVIS
+Date: December 02, 2025
+Location: 0356 Turner Street Apt. 136
+Antoniohaven, ID 95549
 
-Before the Honorable Judge Angela Chung
+Before the Honorable Judge James Rodriguez
 
 APPEARANCES:
-For the Plaintiff: Mr. Kevin Smith DDS, Esq.
-For the Defendant: Misty Sandoval, Esq.
+For the Plaintiff: Paul Anderson, Esq.
+For the Defendant: Kelly Morrison, Esq.
 
 ---
 
 THE COURT REPORTER: This deposition is being taken pursuant to notice.
 The witness has been sworn.
 
-EXAMINATION BY KEVIN:
+EXAMINATION BY ANDERSON:
 
 Q: Please state your full name for the record.
-A: My name is James Hernandez.
+A: My name is Brittney Davis.
 
 Q: And what is your current occupation?
-A: I am a Careers information officer at Sosa, Herrera and Adams.
+A: I am a Orthoptist at Hickman-Cantrell.
 
 Q: How long have you held that position?
-A: Approximately 7 years.
+A: Approximately 8 years.
 
 Q: Can you describe your involvement with the events in question?
-A: Yes. On or about July 19, 2024, 
-I was contacted by Eileen Hoffman regarding a matter involving maximize holistic mindshare.
+A: Yes. On or about April 01, 2025, 
+I was contacted by Kimberly Diaz regarding a matter involving innovate open-source relationships.
 
 Q: And what happened next?
 A: I was asked to review certain financial documents related to transactions 
-totaling approximately $4,215,995. During my review, 
+totaling approximately $509,515. During my review, 
 I noticed several irregularities.
 
 Q: Can you describe these irregularities?
@@ -45,7 +45,7 @@ A: There were multiple payments to entities that appeared to be shell companies.
 The amounts were always just under $10,000, which seemed designed to avoid 
 reporting requirements. Additionally, some invoices were backdated.
 
-SANDOVAL: Objection. Speculation.
+MORRISON: Objection. Speculation.
 THE COURT: Overruled. The witness may continue.
 
 A: As I was saying, the invoices appeared to be backdated by several months. 
@@ -53,13 +53,13 @@ I also found discrepancies between the internal ledger and the bank statements
 provided to auditors.
 
 Q: Did you report these findings to anyone?
-A: Yes, I reported them to Amanda Hudson, the Chief Financial Officer, 
-on May 16, 2025.
+A: Yes, I reported them to Derek Cooper, the Chief Financial Officer, 
+on August 31, 2025.
 
 Q: What was the response?
 A: I was told to "not worry about it" and to focus on other matters.
 
-SANDOVAL: Objection. Hearsay.
+MORRISON: Objection. Hearsay.
 THE COURT: Sustained as to the characterization. Please limit your testimony 
 to direct observations.
 
@@ -69,14 +69,14 @@ were subsequently moved to a restricted access folder.
 
 Q: Do you have any documentation supporting your testimony?
 A: Yes, I retained copies of the original documents and my analysis report 
-dated September 09, 2025.
+dated December 28, 2025.
 
-[TRANSCRIPT CONTINUES - Pages 93-253]
+[TRANSCRIPT CONTINUES - Pages 165-254]
 
 ---
 CERTIFICATE OF REPORTER
 
-I, Ryan Aguirre, Certified Court Reporter, hereby certify that the foregoing 
+I, Laura Watson, Certified Court Reporter, hereby certify that the foregoing 
 is a true and accurate transcript of the proceedings taken in the above-entitled matter.
 
-Date: June 02, 2025
+Date: December 02, 2025

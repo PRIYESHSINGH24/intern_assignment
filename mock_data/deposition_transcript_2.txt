@@ -1,43 +1,43 @@
 UNITED STATES DISTRICT COURT
-NORTHERN DISTRICT OF COLORADO
+NORTHERN DISTRICT OF MISSISSIPPI
 
-Case No.: 57-CV-1555
-BUSH, WYATT AND BURKE v. BAXTER, MARSH AND SPENCER
+Case No.: 50-CV-7418
+LUCAS-THOMAS v. BROOKS AND SONS
 
-DEPOSITION OF MR. GENE MILLER
-Date: August 05, 2025
-Location: 0344 Cruz Walk
-Pinedabury, FL 27772
+DEPOSITION OF LISA FRENCH
+Date: June 15, 2025
+Location: 441 Valentine Meadows Suite 247
+Millerchester, SC 54676
 
-Before the Honorable Judge Brian Serrano
+Before the Honorable Judge Charles Carroll
 
 APPEARANCES:
-For the Plaintiff: Peter Coleman, Esq.
-For the Defendant: Jacob Jordan, Esq.
+For the Plaintiff: Terry Little, Esq.
+For the Defendant: Jane Anderson, Esq.
 
 ---
 
 THE COURT REPORTER: This deposition is being taken pursuant to notice.
 The witness has been sworn.
 
-EXAMINATION BY COLEMAN:
+EXAMINATION BY LITTLE:
 
 Q: Please state your full name for the record.
-A: My name is Mr. Gene Miller.
+A: My name is Lisa French.
 
 Q: And what is your current occupation?
-A: I am a Commercial/residential surveyor at Young-Nelson.
+A: I am a Architectural technologist at Curtis and Sons.
 
 Q: How long have you held that position?
 A: Approximately 2 years.
 
 Q: Can you describe your involvement with the events in question?
-A: Yes. On or about March 25, 2026, 
-I was contacted by Samantha Clarke regarding a matter involving orchestrate next-generation eyeballs.
+A: Yes. On or about May 24, 2024, 
+I was contacted by Andrew Barron regarding a matter involving empower 24/7 web services.
 
 Q: And what happened next?
 A: I was asked to review certain financial documents related to transactions 
-totaling approximately $270,685. During my review, 
+totaling approximately $407,890. During my review, 
 I noticed several irregularities.
 
 Q: Can you describe these irregularities?
@@ -45,7 +45,7 @@ A: There were multiple payments to entities that appeared to be shell companies.
 The amounts were always just under $10,000, which seemed designed to avoid 
 reporting requirements. Additionally, some invoices were backdated.
 
-JORDAN: Objection. Speculation.
+ANDERSON: Objection. Speculation.
 THE COURT: Overruled. The witness may continue.
 
 A: As I was saying, the invoices appeared to be backdated by several months. 
@@ -53,13 +53,13 @@ I also found discrepancies between the internal ledger and the bank statements
 provided to auditors.
 
 Q: Did you report these findings to anyone?
-A: Yes, I reported them to Patrick Lewis, the Chief Financial Officer, 
-on January 14, 2026.
+A: Yes, I reported them to Dawn Wallace, the Chief Financial Officer, 
+on February 03, 2026.
 
 Q: What was the response?
 A: I was told to "not worry about it" and to focus on other matters.
 
-JORDAN: Objection. Hearsay.
+ANDERSON: Objection. Hearsay.
 THE COURT: Sustained as to the characterization. Please limit your testimony 
 to direct observations.
 
@@ -69,14 +69,14 @@ were subsequently moved to a restricted access folder.
 
 Q: Do you have any documentation supporting your testimony?
 A: Yes, I retained copies of the original documents and my analysis report 
-dated June 22, 2025.
+dated January 03, 2026.
 
-[TRANSCRIPT CONTINUES - Pages 109-307]
+[TRANSCRIPT CONTINUES - Pages 80-338]
 
 ---
 CERTIFICATE OF REPORTER
 
-I, James Ramos, Certified Court Reporter, hereby certify that the foregoing 
+I, Miss Becky Williams, Certified Court Reporter, hereby certify that the foregoing 
 is a true and accurate transcript of the proceedings taken in the above-entitled matter.
 
-Date: August 05, 2025
+Date: June 15, 2025
