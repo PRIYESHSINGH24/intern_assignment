@@ -552,6 +552,23 @@ def generate_mock_dataset():
         files.append(exact_dup)
         print(f"  ✓ email_correspondence_1_copy.eml (exact duplicate)")
 
+    # Generate Image (for OCR testing)
+    try:
+        from PIL import Image, ImageDraw, ImageFont
+        img = Image.new('RGB', (800, 600), color=(255, 255, 255))
+        d = ImageDraw.Draw(img)
+        d.text((50, 50), "SCANNED EVIDENCE RECEIPT", fill=(0, 0, 0))
+        d.text((50, 100), f"Receipt No: {fake.bothify('RC-####')}", fill=(0, 0, 0))
+        d.text((50, 150), f"Date: {fake.date_this_year().strftime('%B %d, %Y')}", fill=(0, 0, 0))
+        d.text((50, 200), f"Amount Paid: ${random.randint(1000, 50000)}.00", fill=(0, 0, 0))
+        d.text((50, 250), "Note: This is a cash transaction not recorded in the ledger.", fill=(200, 0, 0))
+        img_path = os.path.join(MOCK_DIR, "scanned_receipt.jpg")
+        img.save(img_path)
+        files.append(img_path)
+        print(f"  ✓ scanned_receipt.jpg (OCR image)")
+    except Exception as e:
+        print(f"  ✗ Skipped image generation (PIL not available or error: {e})")
+
     print(f"\n✅ Generated {len(files)} mock documents in: {MOCK_DIR}")
     return files
 
