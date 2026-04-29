@@ -186,3 +186,12 @@ class UploadResponse(BaseModel):
     skipped_files: int
     errors: List[str]
     document_ids: List[UUID]
+
+# ============ Chat Schemas ============
+
+class ChatRequest(BaseModel):
+    message: str = Field(..., min_length=1)
+
+class ChatResponse(BaseModel):
+    response: str
+

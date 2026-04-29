@@ -26,6 +26,7 @@ export const getDocuments = (caseId, params = '') => request(`/cases/${caseId}/d
 export const getDocument = (id) => request(`/documents/${id}`);
 export const getDocumentText = (id) => request(`/documents/${id}/text`);
 export const deleteDocument = (id) => request(`/documents/${id}`, { method: 'DELETE' });
+export const chatWithDocument = (id, message) => request(`/documents/${id}/chat`, { method: 'POST', body: JSON.stringify({ message }) });
 
 // Analytics
 export const getDashboardStats = () => request('/dashboard/stats');

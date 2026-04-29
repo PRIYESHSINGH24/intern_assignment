@@ -1,7 +1,7 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
-import { getDocument, getDocumentText } from '../api/client';
-import { ChevronLeft, FileText, AlertTriangle, Clock, Users, Building, MapPin, DollarSign, CheckCircle, Copy, Eye, FileSearch } from 'lucide-react';
+import { getDocument, getDocumentText, chatWithDocument } from '../api/client';
+import { ChevronLeft, FileText, AlertTriangle, Clock, Users, Building, MapPin, DollarSign, CheckCircle, Copy, Eye, FileSearch, MessageSquare, Send } from 'lucide-react';
 
 export default function DocumentDetail() {
   const { docId } = useParams();
@@ -10,6 +10,39 @@ export default function DocumentDetail() {
   const [text, setText] = useState('');
   const [tab, setTab] = useState('overview');
   const [loading, setLoading] = useState(true);
+  
+  // Chat state
+  const [chatMessages, setChatMessages] = useState([]);
+  const [chatInput, setChatInput] = useState('');
+  const [chatLoading, setChatLoading] = useState(false);
+  const messagesEndRef = useRef(null);
+
+  const scrollToBottom = () => {
+    messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
+  };
+
+  useEffect(() => {
+    scrollToBottom();
+  }, [chatMessages]);
+
+  const handleChatSubmit = async (e) => {
+    e.preventDefault();
+    if (!chatInput.trim() || chatLoading) return;
+    
+    const userMsg = chatInput.trim();
+    setChatInput('');
+    setChatMessages(prev => [...prev, { role: 'user', content: userMsg }]);
+    setChatLoading(true);
+    
+    try {
+      const res = await chatWithDocument(docId, userMsg);
+      setChatMessages(prev => [...prev, { role: 'ai', content: res.response }]);
+    } catch (err) {
+      setChatMessages(prev => [...prev, { role: 'ai', content: "Error: Could not get a response from the AI." }]);
+    } finally {
+      setChatLoading(false);
+    }
+  };
 
   useEffect(() => {
     Promise.all([getDocument(docId), getDocumentText(docId)])
@@ -71,9 +104,9 @@ export default function DocumentDetail() {
 
       {/* Tabs */}
       <div className="tabs animate-in delay-200">
-        {['overview', 'entities', 'dates', 'red-flags', 'text'].map(t => (
+        {['overview', 'entities', 'dates', 'red-flags', 'q&a', 'text'].map(t => (
           <button key={t} className={`tab ${tab === t ? 'active' : ''}`} onClick={() => setTab(t)}>
-            {t.replace('-', ' ').replace(/\b\w/g, l => l.toUpperCase())}
+            {t === 'q&a' ? 'Chat & Q&A' : t.replace('-', ' ').replace(/\b\w/g, l => l.toUpperCase())}
           </button>
         ))}
       </div>
@@ -199,6 +232,64 @@ export default function DocumentDetail() {
                 {f.location && <p style={{ fontSize: 12, color: 'var(--text-muted)', marginTop: 8 }}>Source Location: <span style={{color:'var(--accent)'}}>{f.location}</span></p>}
               </div>
             )) : <div className="empty-state card card-premium"><p>No red flags detected in document</p></div>}
+          </div>
+        )}
+
+        {tab === 'q&a' && (
+          <div className="card card-premium animate-in" style={{ height: '600px', display: 'flex', flexDirection: 'column', padding: 0, overflow: 'hidden' }}>
+            <div style={{ padding: '20px 24px', borderBottom: '1px solid rgba(255,255,255,0.05)', background: 'rgba(0,0,0,0.2)' }}>
+              <div className="section-title" style={{ margin: 0, display: 'flex', alignItems: 'center', gap: 8 }}>
+                <MessageSquare size={20} color="var(--accent)" /> Ask AI Document Assistant
+              </div>
+            </div>
+            
+            <div style={{ flex: 1, overflowY: 'auto', padding: '24px', display: 'flex', flexDirection: 'column', gap: 16 }}>
+              {chatMessages.length === 0 ? (
+                <div className="empty-state" style={{ margin: 'auto' }}>
+                  <MessageSquare size={40} className="empty-state-icon" />
+                  <p style={{ color: '#fff', fontSize: 16 }}>Ask questions about this specific document.</p>
+                  <p style={{ color: 'var(--text-muted)', fontSize: 14 }}>Try "What is the main deliverable?" or "Are there any hidden fees?"</p>
+                </div>
+              ) : (
+                chatMessages.map((msg, i) => (
+                  <div key={i} style={{ 
+                    alignSelf: msg.role === 'user' ? 'flex-end' : 'flex-start',
+                    maxWidth: '80%',
+                    background: msg.role === 'user' ? 'rgba(94, 106, 210, 0.2)' : 'rgba(255,255,255,0.05)',
+                    border: `1px solid ${msg.role === 'user' ? 'rgba(94, 106, 210, 0.4)' : 'rgba(255,255,255,0.1)'}`,
+                    padding: '12px 16px',
+                    borderRadius: '12px',
+                    borderBottomRightRadius: msg.role === 'user' ? 0 : '12px',
+                    borderBottomLeftRadius: msg.role === 'ai' ? 0 : '12px',
+                  }}>
+                    <p style={{ margin: 0, color: '#fff', fontSize: 14, lineHeight: 1.6, whiteSpace: 'pre-wrap' }}>{msg.content}</p>
+                  </div>
+                ))
+              )}
+              {chatLoading && (
+                <div style={{ alignSelf: 'flex-start', padding: '12px 16px', background: 'rgba(255,255,255,0.02)', borderRadius: '12px', borderBottomLeftRadius: 0 }}>
+                  <span className="pulse-dot" style={{ display: 'inline-block' }}></span>
+                </div>
+              )}
+              <div ref={messagesEndRef} />
+            </div>
+
+            <div style={{ padding: '20px', borderTop: '1px solid rgba(255,255,255,0.05)', background: 'rgba(0,0,0,0.3)' }}>
+              <form onSubmit={handleChatSubmit} style={{ display: 'flex', gap: 12 }}>
+                <input 
+                  type="text" 
+                  className="form-input" 
+                  placeholder="Ask a question..." 
+                  value={chatInput} 
+                  onChange={e => setChatInput(e.target.value)} 
+                  disabled={chatLoading}
+                  style={{ flex: 1, borderRadius: 24, paddingLeft: 20 }}
+                />
+                <button type="submit" className="btn btn-primary btn-icon hover-glow" disabled={!chatInput.trim() || chatLoading} style={{ borderRadius: '50%', width: 48, height: 48, padding: 0 }}>
+                  <Send size={18} style={{ marginLeft: -2 }}/>
+                </button>
+              </form>
+            </div>
           </div>
         )}
 

@@ -120,3 +120,27 @@ def delete_document(doc_id: uuid.UUID, db: Session = Depends(get_db)):
     db.commit()
 
     return {"message": "Document deleted successfully"}
+
+
+@router.post("/documents/{doc_id}/chat", response_model=None)
+def chat_with_document(
+    doc_id: uuid.UUID,
+    request: dict,
+    db: Session = Depends(get_db)
+):
+    """Chat with a specific document using its extracted text."""
+    doc = db.query(Document).filter(Document.id == doc_id).first()
+    if not doc:
+        raise HTTPException(status_code=404, detail="Document not found")
+        
+    if not doc.extracted_text:
+        raise HTTPException(status_code=400, detail="Document text has not been extracted yet")
+        
+    query = request.get("message")
+    if not query:
+        raise HTTPException(status_code=400, detail="Message is required")
+        
+    from app.services.ai_analyzer import ai_analyzer
+    response_text = ai_analyzer.chat_with_document(doc.extracted_text, query)
+    
+    return {"response": response_text}

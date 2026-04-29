@@ -337,6 +337,39 @@ Return ONLY valid JSON."""
             }
         }
 
+    def chat_with_document(self, text: str, query: str) -> str:
+        """Ask a specific question about the document text."""
+        self._ensure_initialized()
+        
+        # Truncate text if too long
+        max_chars = 30000
+        truncated_text = text[:max_chars] if len(text) > max_chars else text
+        
+        prompt = f"""You are a helpful AI legal assistant. Answer the user's question based ONLY on the following document text. 
+If the answer is not in the text, politely state that it is not mentioned in the document.
+
+DOCUMENT TEXT:
+---
+{truncated_text}
+---
+
+USER QUESTION:
+{query}
+
+Provide a clear, detailed, and professional answer."""
+
+        try:
+            response = self.model.generate_content(
+                prompt,
+                generation_config=genai.GenerationConfig(
+                    temperature=0.3,
+                    max_output_tokens=2048,
+                )
+            )
+            return response.text
+        except Exception as e:
+            logger.error(f"Chat failed: {str(e)}")
+            return "I apologize, but I encountered an error while analyzing the document to answer your question."
 
 # Singleton instance
 ai_analyzer = AIAnalyzer()
