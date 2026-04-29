@@ -17,35 +17,28 @@ export default function Cases() {
   const [toast, setToast] = useState(null);
   const navigate = useNavigate();
 
-  const load = useCallback((searchTerm) => {
+  const loadCases = useCallback((searchTerm) => {
     setLoading(true);
-    
-    // Fetch cases (fast)
     getCases(searchTerm ? `search=${searchTerm}` : '')
       .then(d => setCases(d.cases || []))
       .catch(() => setCases([]))
       .finally(() => setLoading(false));
-      
-    // Fetch stats separately (slower) so it doesn't block the table loading
-    if (!stats) {
-      getDashboardStats()
-        .then(s => setStats(s))
-        .catch(() => null);
-    }
-  }, [stats]);
+  }, []);
 
-  // Initial load
-  useEffect(() => { 
-    if (!stats) load(''); 
-  }, [load, stats]);
+  // Fetch dashboard stats exactly once on mount
+  useEffect(() => {
+    getDashboardStats()
+      .then(s => setStats(s))
+      .catch(() => null);
+  }, []);
 
-  // Debounced Search load
+  // Debounced Search load for cases
   useEffect(() => {
     const handler = setTimeout(() => {
-      load(search);
-    }, 400); // 400ms debounce
+      loadCases(search);
+    }, 400);
     return () => clearTimeout(handler);
-  }, [search, load]);
+  }, [search, loadCases]);
 
   const onDrop = useCallback((acceptedFiles) => {
     setFilesToUpload(prev => [...prev, ...acceptedFiles]);
@@ -92,7 +85,7 @@ export default function Cases() {
       await deleteCase(id);
       setToast({ type: 'success', message: 'Case deleted' });
       setTimeout(() => setToast(null), 3000);
-      load();
+      loadCases(search);
     } catch (e) {
       setToast({ type: 'error', message: e.message });
       setTimeout(() => setToast(null), 3000);
