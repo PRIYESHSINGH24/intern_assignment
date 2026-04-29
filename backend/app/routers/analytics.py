@@ -45,7 +45,12 @@ def get_dashboard_stats(db: Session = Depends(get_db)):
         func.sum(func.cast(Document.status == "failed", Integer)).label("failed"),
         func.sum(func.cast(Document.is_duplicate == True, Integer)).label("duplicates"),
         func.sum(Document.file_size).label("storage"),
-        func.sum(func.json_array_length(Document.red_flags)).label("red_flags")
+        func.sum(
+            func.case(
+                (func.json_typeof(Document.red_flags) == 'array', func.json_array_length(Document.red_flags)),
+                else_=0
+            )
+        ).label("red_flags")
     ).first()
 
     total_cases = db.query(Case).count()

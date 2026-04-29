@@ -110,26 +110,24 @@ export default function Cases() {
         <button className="btn btn-primary" onClick={() => setShowModal(true)}><Plus size={18} /> New Case</button>
       </div>
 
-      {stats && (
-        <div className="stats-grid animate-in delay-100 mb-32" style={{gridTemplateColumns:'repeat(4,1fr)'}}>
-          <div className="card card-premium stat-card info">
-            <div className="flex-between"><Activity size={20} color="var(--info)"/><div className="stat-value">{stats.total_cases}</div></div>
-            <div className="stat-label">Total Cases</div>
-          </div>
-          <div className="card card-premium stat-card success">
-            <div className="flex-between"><FileText size={20} color="var(--success)"/><div className="stat-value">{stats.total_processed}</div></div>
-            <div className="stat-label">Documents Processed</div>
-          </div>
-          <div className="card card-premium stat-card warning">
-            <div className="flex-between"><AlertTriangle size={20} color="var(--warning)"/><div className="stat-value" style={{color: stats.total_red_flags > 0 ? 'var(--warning)' : 'inherit'}}>{stats.total_red_flags}</div></div>
-            <div className="stat-label">Global Red Flags</div>
-          </div>
-          <div className="card card-premium stat-card purple">
-            <div className="flex-between"><Sparkles size={20} color="#9b59b6"/><div className="stat-value">{stats.total_duplicates}</div></div>
-            <div className="stat-label">Duplicates Caught</div>
-          </div>
+      <div className="stats-grid animate-in delay-100 mb-32" style={{gridTemplateColumns:'repeat(4,1fr)'}}>
+        <div className={`card card-premium stat-card info ${!stats ? 'skeleton' : ''}`}>
+          <div className="flex-between"><Activity size={20} color="var(--info)"/><div className="stat-value">{!stats ? '0' : stats.total_cases}</div></div>
+          <div className="stat-label">Total Cases</div>
         </div>
-      )}
+        <div className={`card card-premium stat-card success ${!stats ? 'skeleton' : ''}`}>
+          <div className="flex-between"><FileText size={20} color="var(--success)"/><div className="stat-value">{!stats ? '0' : stats.total_processed}</div></div>
+          <div className="stat-label">Documents Processed</div>
+        </div>
+        <div className={`card card-premium stat-card warning ${!stats ? 'skeleton' : ''}`}>
+          <div className="flex-between"><AlertTriangle size={20} color="var(--warning)"/><div className="stat-value" style={{color: stats?.total_red_flags > 0 ? 'var(--warning)' : 'inherit'}}>{!stats ? '0' : stats.total_red_flags}</div></div>
+          <div className="stat-label">Global Red Flags</div>
+        </div>
+        <div className={`card card-premium stat-card purple ${!stats ? 'skeleton' : ''}`}>
+          <div className="flex-between"><Sparkles size={20} color="#9b59b6"/><div className="stat-value">{!stats ? '0' : stats.total_duplicates}</div></div>
+          <div className="stat-label">Duplicates Caught</div>
+        </div>
+      </div>
 
       <div className="animate-in delay-100" style={{ marginBottom: 24 }}>
         <div style={{ position: 'relative', maxWidth: 400 }}>
