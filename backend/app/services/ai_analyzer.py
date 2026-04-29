@@ -65,6 +65,9 @@ class AIAnalyzer:
             )
 
             result = self._parse_response(response.text)
+            if "error" in result:
+                logger.warning(f"JSON Parse failed for {filename}, falling back. Raw: {result.get('raw')}")
+                return self._fallback_analysis(text, filename)
             return result
 
         except Exception as e:
@@ -102,6 +105,9 @@ class AIAnalyzer:
             )
 
             result = self._parse_response(response.text)
+            if "error" in result:
+                logger.warning(f"Case Summary JSON Parse failed, falling back. Raw: {result.get('raw')}")
+                raise Exception("JSON Parse Failed")
             return result
 
         except Exception as e:

@@ -277,7 +277,8 @@ class ProcessingPipeline:
                     result["ai_metadata"] = {
                         "language": analysis.get("language", "en"),
                         "tone": analysis.get("tone", "neutral"),
-                        "additional": analysis.get("additional_metadata", {})
+                        "additional": analysis.get("additional_metadata", {}),
+                        "project_details": analysis.get("project_details", {})
                     }
                 except Exception as e:
                     logger.warning(f"[{doc_id}] AI analysis failed: {e}, using fallback")
