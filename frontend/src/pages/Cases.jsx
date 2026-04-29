@@ -19,20 +19,19 @@ export default function Cases() {
 
   const load = useCallback((searchTerm) => {
     setLoading(true);
-    const promises = [getCases(searchTerm ? `search=${searchTerm}` : '')];
     
-    // Only fetch stats if we haven't already
+    // Fetch cases (fast)
+    getCases(searchTerm ? `search=${searchTerm}` : '')
+      .then(d => setCases(d.cases || []))
+      .catch(() => setCases([]))
+      .finally(() => setLoading(false));
+      
+    // Fetch stats separately (slower) so it doesn't block the table loading
     if (!stats) {
-      promises.push(getDashboardStats().catch(() => null));
+      getDashboardStats()
+        .then(s => setStats(s))
+        .catch(() => null);
     }
-
-    Promise.all(promises)
-    .then((results) => {
-      setCases(results[0]?.cases || []);
-      if (results[1]) setStats(results[1]);
-    })
-    .catch(() => setCases([]))
-    .finally(() => setLoading(false));
   }, [stats]);
 
   // Initial load
