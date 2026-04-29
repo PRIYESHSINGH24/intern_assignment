@@ -1,10 +1,10 @@
 INTERNAL MEMORANDUM
 CONFIDENTIAL - ATTORNEY WORK PRODUCT
 
-TO: Carmen Berger, Senior Associate
-FROM: Erik Cherry, Associate
-DATE: February 20, 2026
-RE: Case Analysis - Chavez LLC Matter
+TO: Alicia Perez, Senior Associate
+FROM: Jessica Brown, Research Analyst
+DATE: November 03, 2025
+RE: Case Analysis - Lawrence Inc Matter
 
 ------------------------------------------------------------
 
@@ -14,30 +14,30 @@ Following my review of the documents produced in discovery, I have identified
 the following issues that require immediate attention:
 
 1. DOCUMENT INCONSISTENCIES
-   - The executed version of the merger agreement 
-     dated April 30, 2025 differs 
+   - The executed version of the service agreement 
+     dated June 15, 2024 differs 
      materially from the draft version in our files
    - Key changes include modifications to the governing law section
-   - These changes were not authorized by Patrick Brown
+   - These changes were not authorized by Barbara Rowland
 
 2. TIMELINE DISCREPANCIES
-   - The respondent claims the agreement was signed on June 15, 2024
+   - The respondent claims the agreement was signed on November 12, 2024
    - However, email metadata suggests the document was created 4 weeks later
    - This raises questions about the authenticity of the signed version
 
 3. FINANCIAL IRREGULARITIES
-   - Wire transfer records show $430,390 in payments 
+   - Wire transfer records show $3,447,293 in payments 
      to an entity not disclosed in the original agreement
-   - The receiving entity appears to be controlled by Megan Nguyen, 
-     a board member
+   - The receiving entity appears to be controlled by Leslie Leach, 
+     a undisclosed related party
 
 RECOMMENDED ACTIONS:
-- Subpoena bank records for the period June 2024 
-  through July 2025
-- Depose Gary Hawkins regarding knowledge of the undisclosed payments
+- Subpoena bank records for the period May 2024 
+  through August 2025
+- Depose Maria West regarding knowledge of the undisclosed payments
 - Engage forensic document examiner to verify authenticity of signatures
-- File motion to compel production of all communications with Gonzalez-Williams
+- File motion to compel production of all communications with Bond-Kline
 
-DEADLINE: Response due by May 24, 2026
+DEADLINE: Response due by May 11, 2026
 
 Please advise on how to proceed.

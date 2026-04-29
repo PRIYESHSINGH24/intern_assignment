@@ -1,10 +1,10 @@
 INTERNAL MEMORANDUM
 CONFIDENTIAL - ATTORNEY WORK PRODUCT
 
-TO: Stephen Burton, Managing Partner
-FROM: Eric Sherman, Research Analyst
-DATE: July 11, 2025
-RE: Case Analysis - Snyder, Bowen and Bryan Matter
+TO: Sarah Cruz, Department Head
+FROM: Timothy Welch, Paralegal
+DATE: October 28, 2025
+RE: Case Analysis - Harmon-Lyons Matter
 
 ------------------------------------------------------------
 
@@ -14,30 +14,30 @@ Following my review of the documents produced in discovery, I have identified
 the following issues that require immediate attention:
 
 1. DOCUMENT INCONSISTENCIES
-   - The executed version of the merger agreement 
-     dated November 18, 2024 differs 
+   - The executed version of the service agreement 
+     dated July 04, 2025 differs 
      materially from the draft version in our files
    - Key changes include modifications to the governing law section
-   - These changes were not authorized by Tim Smith
+   - These changes were not authorized by Dr. Jimmy Yang
 
 2. TIMELINE DISCREPANCIES
-   - The respondent claims the agreement was signed on June 01, 2024
-   - However, email metadata suggests the document was created 3 weeks later
+   - The respondent claims the agreement was signed on December 03, 2024
+   - However, email metadata suggests the document was created 4 weeks later
    - This raises questions about the authenticity of the signed version
 
 3. FINANCIAL IRREGULARITIES
-   - Wire transfer records show $3,394,691 in payments 
+   - Wire transfer records show $3,774,042 in payments 
      to an entity not disclosed in the original agreement
-   - The receiving entity appears to be controlled by Kyle Wise, 
-     a former employee
+   - The receiving entity appears to be controlled by Jenna Smith, 
+     a undisclosed related party
 
 RECOMMENDED ACTIONS:
-- Subpoena bank records for the period July 2024 
-  through December 2025
-- Depose Katherine Arias regarding knowledge of the undisclosed payments
+- Subpoena bank records for the period August 2024 
+  through January 2026
+- Depose Shawn Wells regarding knowledge of the undisclosed payments
 - Engage forensic document examiner to verify authenticity of signatures
-- File motion to compel production of all communications with Sparks Inc
+- File motion to compel production of all communications with Ramirez, Obrien and King
 
-DEADLINE: Response due by May 20, 2026
+DEADLINE: Response due by May 21, 2026
 
 Please advise on how to proceed.

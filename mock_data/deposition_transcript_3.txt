@@ -1,43 +1,43 @@
 UNITED STATES DISTRICT COURT
-NORTHERN DISTRICT OF KANSAS
+NORTHERN DISTRICT OF NEW YORK
 
-Case No.: 40-CV-2379
-ENGLISH, WALSH AND BRIGGS v. NELSON LLC
+Case No.: 15-CV-0605
+SCHMIDT-FREEMAN v. NICHOLS, BALLARD AND NAVARRO
 
-DEPOSITION OF BRITTNEY DAVIS
-Date: December 02, 2025
-Location: 0356 Turner Street Apt. 136
-Antoniohaven, ID 95549
+DEPOSITION OF STEPHANIE WOOD
+Date: March 22, 2026
+Location: 53183 Crawford Manor
+Port Jesse, MI 52212
 
-Before the Honorable Judge James Rodriguez
+Before the Honorable Judge Dorothy Garcia DVM
 
 APPEARANCES:
-For the Plaintiff: Paul Anderson, Esq.
-For the Defendant: Kelly Morrison, Esq.
+For the Plaintiff: Karen Adams, Esq.
+For the Defendant: Deanna Elliott, Esq.
 
 ---
 
 THE COURT REPORTER: This deposition is being taken pursuant to notice.
 The witness has been sworn.
 
-EXAMINATION BY ANDERSON:
+EXAMINATION BY ADAMS:
 
 Q: Please state your full name for the record.
-A: My name is Brittney Davis.
+A: My name is Stephanie Wood.
 
 Q: And what is your current occupation?
-A: I am a Orthoptist at Hickman-Cantrell.
+A: I am a Forensic psychologist at Allen, Walters and Shelton.
 
 Q: How long have you held that position?
-A: Approximately 8 years.
+A: Approximately 14 years.
 
 Q: Can you describe your involvement with the events in question?
-A: Yes. On or about April 01, 2025, 
-I was contacted by Kimberly Diaz regarding a matter involving innovate open-source relationships.
+A: Yes. On or about September 14, 2024, 
+I was contacted by Sara Watson regarding a matter involving iterate back-end infrastructures.
 
 Q: And what happened next?
 A: I was asked to review certain financial documents related to transactions 
-totaling approximately $509,515. During my review, 
+totaling approximately $797,587. During my review, 
 I noticed several irregularities.
 
 Q: Can you describe these irregularities?
@@ -45,7 +45,7 @@ A: There were multiple payments to entities that appeared to be shell companies.
 The amounts were always just under $10,000, which seemed designed to avoid 
 reporting requirements. Additionally, some invoices were backdated.
 
-MORRISON: Objection. Speculation.
+ELLIOTT: Objection. Speculation.
 THE COURT: Overruled. The witness may continue.
 
 A: As I was saying, the invoices appeared to be backdated by several months. 
@@ -53,13 +53,13 @@ I also found discrepancies between the internal ledger and the bank statements
 provided to auditors.
 
 Q: Did you report these findings to anyone?
-A: Yes, I reported them to Derek Cooper, the Chief Financial Officer, 
-on August 31, 2025.
+A: Yes, I reported them to Katherine Kemp, the Chief Financial Officer, 
+on February 27, 2026.
 
 Q: What was the response?
 A: I was told to "not worry about it" and to focus on other matters.
 
-MORRISON: Objection. Hearsay.
+ELLIOTT: Objection. Hearsay.
 THE COURT: Sustained as to the characterization. Please limit your testimony 
 to direct observations.
 
@@ -69,14 +69,14 @@ were subsequently moved to a restricted access folder.
 
 Q: Do you have any documentation supporting your testimony?
 A: Yes, I retained copies of the original documents and my analysis report 
-dated December 28, 2025.
+dated November 14, 2025.
 
-[TRANSCRIPT CONTINUES - Pages 165-254]
+[TRANSCRIPT CONTINUES - Pages 178-307]
 
 ---
 CERTIFICATE OF REPORTER
 
-I, Laura Watson, Certified Court Reporter, hereby certify that the foregoing 
+I, Michael Owens, Certified Court Reporter, hereby certify that the foregoing 
 is a true and accurate transcript of the proceedings taken in the above-entitled matter.
 
-Date: December 02, 2025
+Date: March 22, 2026
