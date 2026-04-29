@@ -28,21 +28,22 @@ def get_dashboard_stats(db: Session = Depends(get_db)):
     total_failed = db.query(Document).filter(Document.status == "failed").count()
     total_duplicates = db.query(Document).filter(Document.is_duplicate == True).count()
 
-    # Count red flags across all documents
-    docs_with_flags = db.query(Document).filter(
+    # Count red flags across all documents without pulling full objects into memory
+    docs_with_flags = db.query(Document.red_flags).filter(
         Document.red_flags != None
     ).all()
     total_red_flags = 0
-    for doc in docs_with_flags:
-        if doc.red_flags and isinstance(doc.red_flags, list):
-            total_red_flags += len(doc.red_flags)
+    for (flags,) in docs_with_flags:
+        if flags and isinstance(flags, list):
+            total_red_flags += len(flags)
 
     # Calculate storage used
     storage_result = db.query(func.sum(Document.file_size)).scalar()
     storage_used = storage_result or 0
 
     # Recent cases
-    recent_cases = db.query(Case).order_by(Case.created_at.desc()).limit(5).all()
+    recent_cases = db.query(Case.id, Case.name, Case.status, Case.created_at).order_by(Case.created_at.desc()).limit(5).all()
+    recent_cases_dicts = [{"id": str(c.id), "name": c.name, "status": c.status, "created_at": c.created_at} for c in recent_cases]
 
     # Check if any case is currently processing
     processing_active = db.query(Case).filter(Case.status == "processing").count() > 0
@@ -63,7 +64,7 @@ def get_dashboard_stats(db: Session = Depends(get_db)):
         total_duplicates=total_duplicates,
         total_red_flags=total_red_flags,
         storage_used_bytes=storage_used,
-        recent_cases=recent_cases,
+        recent_cases=recent_cases_dicts,
         processing_active=processing_active,
         document_type_distribution=doc_type_dist
     )
