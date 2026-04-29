@@ -26,13 +26,6 @@ export default function Dashboard() {
       .finally(() => setLoading(false));
   }, []);
 
-  if (loading) return (
-    <div className="loading-container animate-in">
-      <div className="loading-spinner" />
-      <p style={{marginTop:16, fontWeight:600, letterSpacing:'2px', fontSize:12, textTransform:'uppercase'}}>Initializing Neural Link...</p>
-    </div>
-  );
-
   const s = stats || { total_cases:0, total_documents:0, total_processed:0, total_failed:0, total_duplicates:0, total_red_flags:0, storage_used_bytes:0, recent_cases:[], document_type_distribution:{} };
 
   const pieData = Object.entries(s.document_type_distribution || {}).map(([name, value]) => ({ name, value }));
@@ -48,34 +41,34 @@ export default function Dashboard() {
       </div>
 
       <div className="stats-grid">
-        <div className="card card-premium stat-card hover-glow animate-in delay-100">
+        <div className={`card card-premium stat-card hover-glow animate-in delay-100 ${loading ? 'skeleton' : ''}`}>
           <div className="stat-icon accent"><FolderOpen size={24} /></div>
-          <div className="stat-value">{s.total_cases}</div>
+          <div className="stat-value">{loading ? '00' : s.total_cases}</div>
           <div className="stat-label">Active Cases</div>
         </div>
-        <div className="card card-premium stat-card hover-glow animate-in delay-100">
+        <div className={`card card-premium stat-card hover-glow animate-in delay-100 ${loading ? 'skeleton' : ''}`}>
           <div className="stat-icon info"><FileText size={24} /></div>
-          <div className="stat-value">{s.total_documents}</div>
+          <div className="stat-value">{loading ? '00' : s.total_documents}</div>
           <div className="stat-label">Ingested Documents</div>
         </div>
-        <div className="card card-premium stat-card hover-glow animate-in delay-200">
+        <div className={`card card-premium stat-card hover-glow animate-in delay-200 ${loading ? 'skeleton' : ''}`}>
           <div className="stat-icon success"><CheckCircle size={24} /></div>
-          <div className="stat-value">{s.total_processed}</div>
+          <div className="stat-value">{loading ? '00' : s.total_processed}</div>
           <div className="stat-label">Processed via AI</div>
         </div>
-        <div className="card card-premium stat-card hover-glow animate-in delay-200">
+        <div className={`card card-premium stat-card hover-glow animate-in delay-200 ${loading ? 'skeleton' : ''}`}>
           <div className="stat-icon danger"><XCircle size={24} /></div>
-          <div className="stat-value">{s.total_failed}</div>
+          <div className="stat-value">{loading ? '00' : s.total_failed}</div>
           <div className="stat-label">Processing Failed</div>
         </div>
-        <div className="card card-premium stat-card hover-glow animate-in delay-300">
-          <div className="stat-icon" style={{background:'rgba(155, 89, 182, 0.15)', color:'#9b59b6'}}><Copy size={24} /></div>
-          <div className="stat-value">{s.total_duplicates}</div>
+        <div className={`card card-premium stat-card hover-glow animate-in delay-300 ${loading ? 'skeleton' : ''}`}>
+          <div className="stat-icon purple"><Copy size={24} /></div>
+          <div className="stat-value">{loading ? '00' : s.total_duplicates}</div>
           <div className="stat-label">Near-Duplicates</div>
         </div>
-        <div className="card card-premium stat-card hover-glow animate-in delay-300">
+        <div className={`card card-premium stat-card hover-glow animate-in delay-300 ${loading ? 'skeleton' : ''}`}>
           <div className="stat-icon warning"><AlertTriangle size={24} /></div>
-          <div className="stat-value" style={{color: s.total_red_flags > 0 ? 'var(--warning)' : 'inherit'}}>{s.total_red_flags}</div>
+          <div className="stat-value" style={{color: s.total_red_flags > 0 ? 'var(--warning)' : 'inherit'}}>{loading ? '00' : s.total_red_flags}</div>
           <div className="stat-label">Red Flags Detected</div>
         </div>
       </div>

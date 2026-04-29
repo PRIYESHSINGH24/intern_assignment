@@ -31,17 +31,24 @@ export default function CaseDetail() {
 
   const showToast = (type, message) => { setToast({type,message}); setTimeout(()=>setToast(null),3000); };
 
-  const loadAll = useCallback(async () => {
-    try {
-      const [c, d] = await Promise.all([getCase(caseId), getDocuments(caseId)]);
-      setCaseData(c);
-      setDocuments(d.documents || []);
-      try { setSummary(await getCaseSummary(caseId)); } catch {}
-      try { setRedFlags(await getCaseRedFlags(caseId)); } catch {}
-      try { setTimeline(await getCaseTimeline(caseId)); } catch {}
-      try { setStatus(await getCaseStatus(caseId)); } catch {}
-    } catch { showToast('error','Failed to load case'); }
-    setLoading(false);
+  const loadAll = useCallback(() => {
+    // 1. Fetch primary data (Case info & Documents list) and drop loading spinner instantly
+    Promise.all([getCase(caseId), getDocuments(caseId)])
+      .then(([c, d]) => {
+        setCaseData(c);
+        setDocuments(d.documents || []);
+        setLoading(false); // Drop loading screen instantly for better perceived performance
+      })
+      .catch(() => {
+        showToast('error', 'Failed to load case');
+        setLoading(false);
+      });
+
+    // 2. Fetch all heavy analytics concurrently in the background (Non-blocking)
+    getCaseSummary(caseId).then(setSummary).catch(() => null);
+    getCaseRedFlags(caseId).then(setRedFlags).catch(() => null);
+    getCaseTimeline(caseId).then(setTimeline).catch(() => null);
+    getCaseStatus(caseId).then(setStatus).catch(() => null);
   }, [caseId]);
 
   useEffect(() => { loadAll(); }, [loadAll]);
