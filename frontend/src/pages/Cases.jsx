@@ -1,11 +1,12 @@
 import { useState, useEffect, useCallback } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useDropzone } from 'react-dropzone';
-import { getCases, createCase, deleteCase, uploadDocuments } from '../api/client';
-import { Plus, FolderOpen, Trash2, Search, X, Sparkles, Upload, File as FileIcon } from 'lucide-react';
+import { getCases, createCase, deleteCase, uploadDocuments, getDashboardStats } from '../api/client';
+import { Plus, FolderOpen, Trash2, Search, X, Sparkles, Upload, File as FileIcon, Activity, AlertTriangle, FileText } from 'lucide-react';
 
 export default function Cases() {
   const [cases, setCases] = useState([]);
+  const [stats, setStats] = useState(null);
   const [loading, setLoading] = useState(true);
   const [showModal, setShowModal] = useState(false);
   const [search, setSearch] = useState('');
@@ -18,10 +19,16 @@ export default function Cases() {
 
   const load = () => {
     setLoading(true);
-    getCases(search ? `search=${search}` : '')
-      .then(d => setCases(d.cases || []))
-      .catch(() => setCases([]))
-      .finally(() => setLoading(false));
+    Promise.all([
+      getCases(search ? `search=${search}` : ''),
+      getDashboardStats().catch(() => null)
+    ])
+    .then(([d, s]) => {
+      setCases(d.cases || []);
+      if (s) setStats(s);
+    })
+    .catch(() => setCases([]))
+    .finally(() => setLoading(false));
   };
 
   useEffect(() => { load(); }, [search]);
@@ -89,12 +96,33 @@ export default function Cases() {
         <div>
           <h2 style={{display:'flex', alignItems:'center', gap:12}}>
             <FolderOpen color="var(--accent)" size={32} />
-            Active Cases
+            Global Workspace
           </h2>
-          <p>Manage document cases and processing</p>
+          <p>Manage document cases and organizational intelligence</p>
         </div>
         <button className="btn btn-primary" onClick={() => setShowModal(true)}><Plus size={18} /> New Case</button>
       </div>
+
+      {stats && (
+        <div className="stats-grid animate-in delay-100 mb-32" style={{gridTemplateColumns:'repeat(4,1fr)'}}>
+          <div className="card card-premium stat-card info">
+            <div className="flex-between"><Activity size={20} color="var(--info)"/><div className="stat-value">{stats.total_cases}</div></div>
+            <div className="stat-label">Total Cases</div>
+          </div>
+          <div className="card card-premium stat-card success">
+            <div className="flex-between"><FileText size={20} color="var(--success)"/><div className="stat-value">{stats.total_processed}</div></div>
+            <div className="stat-label">Documents Processed</div>
+          </div>
+          <div className="card card-premium stat-card warning">
+            <div className="flex-between"><AlertTriangle size={20} color="var(--warning)"/><div className="stat-value" style={{color: stats.total_red_flags > 0 ? 'var(--warning)' : 'inherit'}}>{stats.total_red_flags}</div></div>
+            <div className="stat-label">Global Red Flags</div>
+          </div>
+          <div className="card card-premium stat-card purple">
+            <div className="flex-between"><Sparkles size={20} color="#9b59b6"/><div className="stat-value">{stats.total_duplicates}</div></div>
+            <div className="stat-label">Duplicates Caught</div>
+          </div>
+        </div>
+      )}
 
       <div className="animate-in delay-100" style={{ marginBottom: 24 }}>
         <div style={{ position: 'relative', maxWidth: 400 }}>
