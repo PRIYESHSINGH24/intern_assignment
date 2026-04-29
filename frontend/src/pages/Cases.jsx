@@ -17,21 +17,36 @@ export default function Cases() {
   const [toast, setToast] = useState(null);
   const navigate = useNavigate();
 
-  const load = () => {
+  const load = useCallback((searchTerm) => {
     setLoading(true);
-    Promise.all([
-      getCases(search ? `search=${search}` : ''),
-      getDashboardStats().catch(() => null)
-    ])
-    .then(([d, s]) => {
-      setCases(d.cases || []);
-      if (s) setStats(s);
+    const promises = [getCases(searchTerm ? `search=${searchTerm}` : '')];
+    
+    // Only fetch stats if we haven't already
+    if (!stats) {
+      promises.push(getDashboardStats().catch(() => null));
+    }
+
+    Promise.all(promises)
+    .then((results) => {
+      setCases(results[0]?.cases || []);
+      if (results[1]) setStats(results[1]);
     })
     .catch(() => setCases([]))
     .finally(() => setLoading(false));
-  };
+  }, [stats]);
 
-  useEffect(() => { load(); }, [search]);
+  // Initial load
+  useEffect(() => { 
+    if (!stats) load(''); 
+  }, [load, stats]);
+
+  // Debounced Search load
+  useEffect(() => {
+    const handler = setTimeout(() => {
+      load(search);
+    }, 400); // 400ms debounce
+    return () => clearTimeout(handler);
+  }, [search, load]);
 
   const onDrop = useCallback((acceptedFiles) => {
     setFilesToUpload(prev => [...prev, ...acceptedFiles]);
