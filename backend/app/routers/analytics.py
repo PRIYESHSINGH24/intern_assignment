@@ -9,7 +9,7 @@ from typing import Optional
 
 from fastapi import APIRouter, Depends, HTTPException
 from sqlalchemy.orm import Session
-from sqlalchemy import func
+from sqlalchemy import func, Integer
 
 from app.database import get_db
 from app.models import Case, Document, CaseSummary, ProcessingLog
@@ -37,11 +37,21 @@ def get_dashboard_stats(db: Session = Depends(get_db)):
         logger.debug("Returning cached dashboard stats")
         return _DASHBOARD_CACHE["data"]
 
+    # Use a single query for all document statistics to eliminate multiple network roundtrips
+    doc_stats = db.query(
+        func.count(Document.id).label("total_docs"),
+        func.sum(func.cast(Document.status == "completed", Integer)).label("processed"),
+        func.sum(func.cast(Document.status == "failed", Integer)).label("failed"),
+        func.sum(func.cast(Document.is_duplicate == True, Integer)).label("duplicates"),
+        func.sum(Document.file_size).label("storage")
+    ).first()
+
     total_cases = db.query(Case).count()
-    total_documents = db.query(Document).count()
-    total_processed = db.query(Document).filter(Document.status == "completed").count()
-    total_failed = db.query(Document).filter(Document.status == "failed").count()
-    total_duplicates = db.query(Document).filter(Document.is_duplicate == True).count()
+    total_documents = int(doc_stats.total_docs or 0)
+    total_processed = int(doc_stats.processed or 0)
+    total_failed = int(doc_stats.failed or 0)
+    total_duplicates = int(doc_stats.duplicates or 0)
+    storage_used = int(doc_stats.storage or 0)
 
     # Count red flags across all documents without pulling full objects into memory
     docs_with_flags = db.query(Document.red_flags).filter(
@@ -51,10 +61,6 @@ def get_dashboard_stats(db: Session = Depends(get_db)):
     for (flags,) in docs_with_flags:
         if flags and isinstance(flags, list):
             total_red_flags += len(flags)
-
-    # Calculate storage used
-    storage_result = db.query(func.sum(Document.file_size)).scalar()
-    storage_used = storage_result or 0
 
     # Recent cases
     recent_cases = db.query(Case).order_by(Case.created_at.desc()).limit(5).all()
