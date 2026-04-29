@@ -104,6 +104,50 @@ export default function CaseDetail() {
   const pending = documents.filter(d=>d.status==='pending').length;
   const pieData = summary?.document_type_distribution ? Object.entries(summary.document_type_distribution).map(([name,value])=>({name,value})) : [];
 
+  const exportReport = () => {
+    if (!summary) return;
+    
+    let content = `# DOCINTEL AI INTELLIGENCE REPORT\n`;
+    content += `Case: ${caseData?.name || 'Unknown'}\n`;
+    content += `Generated: ${new Date().toLocaleString()}\n\n`;
+    
+    content += `## EXECUTIVE SUMMARY\n`;
+    content += `${summary.executive_summary}\n\n`;
+    
+    if (summary.risk_assessment) {
+      content += `## RISK ASSESSMENT (Score: ${summary.risk_assessment.risk_score}/100)\n`;
+      content += `Overall Risk Level: ${summary.risk_assessment.overall_risk?.toUpperCase()}\n\n`;
+      (summary.risk_assessment.factors || []).forEach(f => {
+        content += `- [${f.severity.toUpperCase()}] ${f.factor}: ${f.description}\n`;
+      });
+      content += `\n`;
+    }
+    
+    if (redFlags?.flags?.length > 0) {
+      content += `## RED FLAGS DETECTED\n`;
+      redFlags.flags.forEach(f => {
+        content += `- [${f.severity.toUpperCase()}] ${f.flag} (Source: ${f.source_document})\n  Detail: ${f.detail}\n`;
+      });
+      content += `\n`;
+    }
+
+    if (timeline?.timeline?.length > 0) {
+      content += `## CHRONOLOGICAL TIMELINE\n`;
+      timeline.timeline.forEach(t => {
+        content += `- ${t.date} [${t.significance.toUpperCase()}]: ${t.context} (Source: ${t.source_document})\n`;
+      });
+    }
+
+    const blob = new Blob([content], { type: 'text/markdown' });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = `DocIntel_Report_${caseData?.name.replace(/\s+/g, '_')}.md`;
+    a.click();
+    URL.revokeObjectURL(url);
+    showToast('success', 'Intelligence Report Downloaded');
+  };
+
   return (
     <div style={{paddingBottom: 40}}>
       <div className="flex gap-12 animate-in" style={{alignItems:'center',marginBottom:16}}>
@@ -210,6 +254,12 @@ export default function CaseDetail() {
           <div>
             {summary ? (
               <div>
+                <div className="flex-between mb-16 animate-in">
+                  <h3 style={{margin:0, color:'#fff'}}>Consolidated Case Intelligence</h3>
+                  <button className="btn btn-outline hover-glow" onClick={exportReport}>
+                    <Copy size={16}/> Download Markdown Report
+                  </button>
+                </div>
                 <div className="card card-premium mb-32 animate-in">
                   <div className="section-title"><FileText size={20} color="var(--accent)"/> Executive Summary</div>
                   <p style={{lineHeight:1.8, fontSize: 15, color:'var(--text-secondary)',whiteSpace:'pre-wrap'}}>{summary.executive_summary||'Not yet generated.'}</p>
