@@ -15,13 +15,28 @@ from app.database import get_db
 from app.models import Case, Document, CaseSummary, ProcessingLog
 from app.schemas import CaseSummaryResponse, DashboardStats
 
+import time
+
 logger = logging.getLogger(__name__)
 router = APIRouter(prefix="/api", tags=["Analytics"])
+
+_DASHBOARD_CACHE = {
+    "data": None,
+    "timestamp": 0
+}
+CACHE_TTL = 30  # seconds
 
 
 @router.get("/dashboard/stats", response_model=DashboardStats)
 def get_dashboard_stats(db: Session = Depends(get_db)):
-    """Get overall dashboard statistics."""
+    """Get overall dashboard statistics with TTL cache."""
+    current_time = time.time()
+    
+    # Check cache
+    if _DASHBOARD_CACHE["data"] and (current_time - _DASHBOARD_CACHE["timestamp"] < CACHE_TTL):
+        logger.debug("Returning cached dashboard stats")
+        return _DASHBOARD_CACHE["data"]
+
     total_cases = db.query(Case).count()
     total_documents = db.query(Document).count()
     total_processed = db.query(Document).filter(Document.status == "completed").count()
@@ -56,7 +71,7 @@ def get_dashboard_stats(db: Session = Depends(get_db)):
     ).group_by(Document.document_type).all()
     doc_type_dist = {dt: count for dt, count in doc_types}
 
-    return DashboardStats(
+    stats_response = DashboardStats(
         total_cases=total_cases,
         total_documents=total_documents,
         total_processed=total_processed,
@@ -68,6 +83,12 @@ def get_dashboard_stats(db: Session = Depends(get_db)):
         processing_active=processing_active,
         document_type_distribution=doc_type_dist
     )
+    
+    # Update cache
+    _DASHBOARD_CACHE["data"] = stats_response
+    _DASHBOARD_CACHE["timestamp"] = current_time
+    
+    return stats_response
 
 
 @router.get("/cases/{case_id}/summary", response_model=CaseSummaryResponse)
