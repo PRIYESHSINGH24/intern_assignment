@@ -221,7 +221,7 @@ Generate a consolidated JSON report containing extreme detail:
     }},
     
     "timeline": [
-        {{"date": "<date>", "event": "<highly detailed description of the event>", "significance": "<low|medium|high>", "source_documents": ["<which documents mention this>"]}}
+        {{"date": "<date>", "event": "<highly detailed description of the event. YOU MUST INCLUDE ALL PROJECT DETAILS, DEADLINES, DELIVERABLES, AND SCOPE ITEMS IF APPLICABLE TO THIS DATE. Be extremely thorough.>", "significance": "<low|medium|high>", "source_documents": ["<which documents mention this>"]}}
     ],
     
     "key_findings": [

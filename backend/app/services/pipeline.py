@@ -360,11 +360,15 @@ class ProcessingPipeline:
 
         for doc in completed_docs:
             if doc.summary:
-                summaries.append({
+                summary_data = {
                     "filename": doc.original_filename,
                     "type": doc.document_type,
                     "summary": doc.summary
-                })
+                }
+                if doc.ai_metadata and isinstance(doc.ai_metadata, dict) and "project_details" in doc.ai_metadata:
+                    summary_data["project_details"] = doc.ai_metadata["project_details"]
+                
+                summaries.append(summary_data)
 
             if doc.key_entities:
                 all_entities.append({
