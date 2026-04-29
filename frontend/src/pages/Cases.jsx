@@ -1,7 +1,8 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { getCases, createCase, deleteCase } from '../api/client';
-import { Plus, FolderOpen, Trash2, Search, X, Sparkles } from 'lucide-react';
+import { useDropzone } from 'react-dropzone';
+import { getCases, createCase, deleteCase, uploadDocuments } from '../api/client';
+import { Plus, FolderOpen, Trash2, Search, X, Sparkles, Upload, File as FileIcon } from 'lucide-react';
 
 export default function Cases() {
   const [cases, setCases] = useState([]);
@@ -9,6 +10,9 @@ export default function Cases() {
   const [showModal, setShowModal] = useState(false);
   const [search, setSearch] = useState('');
   const [form, setForm] = useState({ name: '', description: '', priority: 'normal' });
+  const [filesToUpload, setFilesToUpload] = useState([]);
+  const [uploading, setUploading] = useState(false);
+  const [uploadProgress, setUploadProgress] = useState(0);
   const [toast, setToast] = useState(null);
   const navigate = useNavigate();
 
@@ -22,16 +26,39 @@ export default function Cases() {
 
   useEffect(() => { load(); }, [search]);
 
+  const onDrop = useCallback((acceptedFiles) => {
+    setFilesToUpload(prev => [...prev, ...acceptedFiles]);
+  }, []);
+
+  const { getRootProps, getInputProps, isDragActive } = useDropzone({ onDrop });
+
+  const removeFile = (index) => {
+    setFilesToUpload(prev => prev.filter((_, i) => i !== index));
+  };
+
   const handleCreate = async () => {
     if (!form.name.trim()) return;
     try {
+      setUploading(true);
       const c = await createCase(form);
+      
+      if (filesToUpload.length > 0) {
+        await uploadDocuments(c.id, filesToUpload, (progress) => {
+          setUploadProgress(progress);
+        });
+      }
+
       setShowModal(false);
       setForm({ name: '', description: '', priority: 'normal' });
+      setFilesToUpload([]);
+      setUploading(false);
+      setUploadProgress(0);
       setToast({ type: 'success', message: `Case "${c.name}" created!` });
-      setTimeout(() => setToast(null), 3000);
-      load();
+      
+      // Auto-navigate to the new case
+      navigate(`/cases/${c.id}`);
     } catch (e) {
+      setUploading(false);
       setToast({ type: 'error', message: e.message });
       setTimeout(() => setToast(null), 3000);
     }
@@ -116,32 +143,69 @@ export default function Cases() {
       )}
 
       {showModal && (
-        <div className="modal-overlay" onClick={() => setShowModal(false)}>
-          <div className="modal" onClick={e => e.stopPropagation()}>
+        <div className="modal-overlay" onClick={() => !uploading && setShowModal(false)}>
+          <div className="modal" onClick={e => e.stopPropagation()} style={{maxWidth: 600}}>
             <h3 style={{display:'flex', alignItems:'center', gap:10}}>
               <Sparkles size={24} color="var(--accent)" />
               Initialize New Case
             </h3>
             <div className="form-group">
               <label>Case Name *</label>
-              <input className="form-input" placeholder="e.g., Smith v. Johnson 2024" value={form.name} onChange={e => setForm({ ...form, name: e.target.value })} autoFocus />
+              <input className="form-input" placeholder="e.g., Smith v. Johnson 2024" value={form.name} onChange={e => setForm({ ...form, name: e.target.value })} autoFocus disabled={uploading}/>
             </div>
             <div className="form-group">
               <label>Description</label>
-              <textarea className="form-input form-textarea" placeholder="Brief description of the case..." value={form.description} onChange={e => setForm({ ...form, description: e.target.value })} />
+              <textarea className="form-input form-textarea" placeholder="Brief description of the case..." value={form.description} onChange={e => setForm({ ...form, description: e.target.value })} disabled={uploading}/>
             </div>
             <div className="form-group">
               <label>Priority Matrix</label>
-              <select className="form-input" value={form.priority} onChange={e => setForm({ ...form, priority: e.target.value })}>
+              <select className="form-input" value={form.priority} onChange={e => setForm({ ...form, priority: e.target.value })} disabled={uploading}>
                 <option value="low">Low Priority</option>
                 <option value="normal">Standard Priority</option>
                 <option value="high">High Priority</option>
                 <option value="urgent">Urgent Processing</option>
               </select>
             </div>
+
+            <div className="form-group" style={{marginTop: 24}}>
+              <label>Initial Documents (Optional)</label>
+              <div {...getRootProps()} className={`dropzone ${isDragActive?'active':''}`} style={{padding: '24px 16px', minHeight: 120, opacity: uploading ? 0.5 : 1, pointerEvents: uploading ? 'none' : 'auto'}}>
+                <input {...getInputProps()} />
+                <div className="dropzone-icon" style={{width:40,height:40}}><Upload size={20}/></div>
+                <p style={{fontWeight:600, fontSize:14, marginBottom:4, color:'#fff'}}>Drag & drop files here</p>
+                <p style={{fontSize:12,color:'var(--text-muted)'}}>Upload initial documents now or later</p>
+              </div>
+              
+              {filesToUpload.length > 0 && (
+                <div style={{marginTop: 12, display: 'flex', flexDirection: 'column', gap: 8, maxHeight: 150, overflowY: 'auto'}}>
+                  {filesToUpload.map((f, i) => (
+                    <div key={i} className="flex-between" style={{background:'rgba(255,255,255,0.05)', padding:'8px 12px', borderRadius:8}}>
+                      <div style={{display:'flex', alignItems:'center', gap:8, overflow:'hidden'}}>
+                        <FileIcon size={14} color="var(--accent)"/>
+                        <span style={{fontSize:13, color:'#fff', whiteSpace:'nowrap', overflow:'hidden', textOverflow:'ellipsis'}}>{f.name}</span>
+                      </div>
+                      {!uploading && <button className="btn btn-icon btn-sm" onClick={() => removeFile(i)} style={{color:'var(--danger)'}}><X size={14}/></button>}
+                    </div>
+                  ))}
+                </div>
+              )}
+            </div>
+
+            {uploading && filesToUpload.length > 0 && (
+              <div style={{marginTop: 20}}>
+                <div className="flex-between mb-8">
+                  <span style={{fontSize:13, fontWeight:600, color:'#fff'}}>Uploading Payload...</span>
+                  <span style={{fontSize:13, color:'var(--accent)', fontWeight:700}}>{uploadProgress}%</span>
+                </div>
+                <div className="progress-bar" style={{height: 6}}><div className="progress-fill" style={{width:`${uploadProgress}%`}}/></div>
+              </div>
+            )}
+
             <div className="flex gap-12" style={{ justifyContent: 'flex-end', marginTop: 32 }}>
-              <button className="btn btn-outline" onClick={() => setShowModal(false)}>Cancel</button>
-              <button className="btn btn-primary" onClick={handleCreate} disabled={!form.name.trim()}>Create Case</button>
+              <button className="btn btn-outline" onClick={() => setShowModal(false)} disabled={uploading}>Cancel</button>
+              <button className="btn btn-primary" onClick={handleCreate} disabled={!form.name.trim() || uploading}>
+                {uploading ? 'Initializing...' : 'Create Case & Upload'}
+              </button>
             </div>
           </div>
         </div>
