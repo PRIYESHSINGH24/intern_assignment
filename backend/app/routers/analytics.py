@@ -38,12 +38,14 @@ def get_dashboard_stats(db: Session = Depends(get_db)):
         return _DASHBOARD_CACHE["data"]
 
     # Use a single query for all document statistics to eliminate multiple network roundtrips
+    # Also calculate red flags count directly in SQL for speed
     doc_stats = db.query(
         func.count(Document.id).label("total_docs"),
         func.sum(func.cast(Document.status == "completed", Integer)).label("processed"),
         func.sum(func.cast(Document.status == "failed", Integer)).label("failed"),
         func.sum(func.cast(Document.is_duplicate == True, Integer)).label("duplicates"),
-        func.sum(Document.file_size).label("storage")
+        func.sum(Document.file_size).label("storage"),
+        func.sum(func.json_array_length(Document.red_flags)).label("red_flags")
     ).first()
 
     total_cases = db.query(Case).count()
@@ -52,29 +54,21 @@ def get_dashboard_stats(db: Session = Depends(get_db)):
     total_failed = int(doc_stats.failed or 0)
     total_duplicates = int(doc_stats.duplicates or 0)
     storage_used = int(doc_stats.storage or 0)
+    total_red_flags = int(doc_stats.red_flags or 0)
 
-    # Count red flags across all documents without pulling full objects into memory
-    docs_with_flags = db.query(Document.red_flags).filter(
-        Document.red_flags != None
-    ).all()
-    total_red_flags = 0
-    for (flags,) in docs_with_flags:
-        if flags and isinstance(flags, list):
-            total_red_flags += len(flags)
-
-    # Recent cases
-    recent_cases = db.query(Case).order_by(Case.created_at.desc()).limit(5).all()
-
-    # Check if any case is currently processing
-    processing_active = db.query(Case).filter(Case.status == "processing").count() > 0
-
-    # Document type distribution
+    # Document type distribution - keep as separate but fast indexed query
     doc_types = db.query(
         Document.document_type, func.count(Document.id)
     ).filter(
         Document.document_type != None
     ).group_by(Document.document_type).all()
     doc_type_dist = {dt: count for dt, count in doc_types}
+
+    # Recent cases
+    recent_cases = db.query(Case).order_by(Case.created_at.desc()).limit(5).all()
+
+    # Check if any case is currently processing
+    processing_active = db.query(Case).filter(Case.status == "processing").count() > 0
 
     stats_response = DashboardStats(
         total_cases=total_cases,
