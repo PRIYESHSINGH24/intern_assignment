@@ -57,8 +57,7 @@ def get_dashboard_stats(db: Session = Depends(get_db)):
     storage_used = storage_result or 0
 
     # Recent cases
-    recent_cases = db.query(Case.id, Case.name, Case.status, Case.created_at).order_by(Case.created_at.desc()).limit(5).all()
-    recent_cases_dicts = [{"id": str(c.id), "name": c.name, "status": c.status, "created_at": c.created_at} for c in recent_cases]
+    recent_cases = db.query(Case).order_by(Case.created_at.desc()).limit(5).all()
 
     # Check if any case is currently processing
     processing_active = db.query(Case).filter(Case.status == "processing").count() > 0
@@ -79,7 +78,7 @@ def get_dashboard_stats(db: Session = Depends(get_db)):
         total_duplicates=total_duplicates,
         total_red_flags=total_red_flags,
         storage_used_bytes=storage_used,
-        recent_cases=recent_cases_dicts,
+        recent_cases=recent_cases,
         processing_active=processing_active,
         document_type_distribution=doc_type_dist
     )
