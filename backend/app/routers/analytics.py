@@ -108,7 +108,7 @@ def get_case_entities(case_id: uuid.UUID, db: Session = Depends(get_db)):
         return summary.key_entities_consolidated
     
     # Fallback: aggregate from individual documents
-    documents = db.query(Document).filter(
+    documents = db.query(Document.key_entities).filter(
         Document.case_id == case_id,
         Document.key_entities != None
     ).all()
@@ -118,8 +118,9 @@ def get_case_entities(case_id: uuid.UUID, db: Session = Depends(get_db)):
     all_locations = set()
     all_monetary = []
 
-    for doc in documents:
-        entities = doc.key_entities or {}
+    for (entities,) in documents:
+        if not entities:
+            continue
         for p in entities.get("persons", []):
             all_persons.add(p)
         for o in entities.get("organizations", []):
@@ -139,17 +140,17 @@ def get_case_entities(case_id: uuid.UUID, db: Session = Depends(get_db)):
 @router.get("/cases/{case_id}/red-flags")
 def get_case_red_flags(case_id: uuid.UUID, db: Session = Depends(get_db)):
     """Get all red flags across documents in a case."""
-    documents = db.query(Document).filter(
+    documents = db.query(Document.id, Document.original_filename, Document.red_flags).filter(
         Document.case_id == case_id,
         Document.red_flags != None
     ).all()
 
     all_flags = []
-    for doc in documents:
-        if doc.red_flags and isinstance(doc.red_flags, list):
-            for flag in doc.red_flags:
-                flag["source_document"] = doc.original_filename
-                flag["document_id"] = str(doc.id)
+    for doc_id, filename, flags in documents:
+        if flags and isinstance(flags, list):
+            for flag in flags:
+                flag["source_document"] = filename
+                flag["document_id"] = str(doc_id)
                 all_flags.append(flag)
 
     # Sort by severity
@@ -169,21 +170,21 @@ def get_case_red_flags(case_id: uuid.UUID, db: Session = Depends(get_db)):
 @router.get("/cases/{case_id}/timeline")
 def get_case_timeline(case_id: uuid.UUID, db: Session = Depends(get_db)):
     """Get a chronological timeline of important dates across case documents."""
-    documents = db.query(Document).filter(
+    documents = db.query(Document.id, Document.original_filename, Document.important_dates).filter(
         Document.case_id == case_id,
         Document.important_dates != None
     ).all()
 
     timeline = []
-    for doc in documents:
-        if doc.important_dates and isinstance(doc.important_dates, list):
-            for date_item in doc.important_dates:
+    for doc_id, filename, dates in documents:
+        if dates and isinstance(dates, list):
+            for date_item in dates:
                 timeline.append({
                     "date": date_item.get("date", ""),
                     "context": date_item.get("context", ""),
                     "significance": date_item.get("significance", "medium"),
-                    "source_document": doc.original_filename,
-                    "document_id": str(doc.id)
+                    "source_document": filename,
+                    "document_id": str(doc_id)
                 })
 
     # Sort by date
